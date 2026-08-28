@@ -1,0 +1,1358 @@
+```html
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>その言い訳、信じる？</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ background:#f4f1eb;
+ color:#292929;
+ font-family:-apple-system,BlinkMacSystemFont,
+ "Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+}
+
+.wrap{
+ max-width:560px;
+ margin:auto;
+ padding:20px 16px 40px;
+}
+
+.header{
+ text-align:center;
+ padding:12px 0 16px;
+}
+
+h1{
+ font-size:28px;
+ margin:4px 0 6px;
+}
+
+.sub{
+ font-size:13px;
+ color:#777;
+}
+
+.top{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin:8px 0 12px;
+ font-size:13px;
+ color:#666;
+}
+
+.card{
+ background:#fff;
+ border-radius:18px;
+ padding:20px;
+ box-shadow:0 5px 20px #00000012;
+}
+
+.case{
+ font-size:12px;
+ color:#888;
+ margin-bottom:8px;
+}
+
+.person{
+ font-size:22px;
+ font-weight:800;
+ margin-bottom:12px;
+}
+
+.info{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+ margin:14px 0;
+}
+
+.info div{
+ background:#f5f3ef;
+ border-radius:9px;
+ padding:10px;
+ font-size:13px;
+}
+
+.info b{
+ display:block;
+ font-size:16px;
+ margin-top:2px;
+}
+
+.dialogue{
+ background:#292929;
+ color:#fff;
+ border-radius:14px;
+ padding:18px;
+ font-size:18px;
+ line-height:1.8;
+ margin:18px 0;
+ position:relative;
+}
+
+.dialogue:before{
+ content:"入居者";
+ display:block;
+ color:#aaa;
+ font-size:11px;
+ margin-bottom:5px;
+}
+
+.turn{
+ font-size:12px;
+ color:#999;
+ margin-bottom:8px;
+}
+
+.buttons{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+}
+
+button{
+ border:0;
+ border-radius:12px;
+ padding:16px 8px;
+ font-size:17px;
+ font-weight:700;
+ cursor:pointer;
+}
+
+button:active{
+ transform:scale(.98);
+}
+
+.truth{
+ background:#dcefe2;
+ color:#205d34;
+}
+
+.lie{
+ background:#f5dfe0;
+ color:#8a2930;
+}
+
+.next{
+ width:100%;
+ background:#292929;
+ color:#fff;
+ margin-top:15px;
+}
+
+.result{
+ display:none;
+ text-align:center;
+}
+
+.result .big{
+ font-size:28px;
+ font-weight:800;
+ margin:4px;
+}
+
+.correct{
+ color:#25733f;
+}
+
+.wrong{
+ color:#a52d35;
+}
+
+.explain{
+ text-align:left;
+ background:#f5f3ef;
+ border-radius:12px;
+ padding:14px;
+ margin-top:16px;
+ font-size:14px;
+ line-height:1.7;
+}
+
+.final{
+ display:none;
+ text-align:center;
+}
+
+.final h2{
+ font-size:25px;
+}
+
+.score{
+ font-size:42px;
+ font-weight:800;
+}
+
+.choice{
+ margin-top:14px;
+ font-size:13px;
+ color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="header">
+<h1>その言い訳、信じる？</h1>
+<div class="sub">
+家賃滞納者との会話から、真実を見抜け。
+</div>
+</div>
+
+<div class="top">
+<span id="count">PERSON 1 / 5</span>
+<strong>スコア：<span id="score">0</span></strong>
+</div>
+
+
+<!-- ゲーム -->
+
+<div class="card" id="game">
+
+<div class="case" id="case"></div>
+
+<div class="person" id="person"></div>
+
+<div class="info" id="info"></div>
+
+<div class="turn" id="turn"></div>
+
+<div class="dialogue" id="dialogue"></div>
+
+<div class="buttons">
+
+<button class="truth" onclick="answer(true)">
+🟢 信じる
+</button>
+
+<button class="lie" onclick="answer(false)">
+🔴 嘘だと思う
+</button>
+
+</div>
+
+</div>
+
+
+<!-- 結果 -->
+
+<div class="card result" id="result">
+
+<div class="big" id="resultBig"></div>
+
+<div id="resultReason"></div>
+
+<div class="explain" id="explain"></div>
+
+<button class="next" onclick="nextTurn()">
+次の会話へ →
+</button>
+
+</div>
+
+
+<!-- 最終結果 -->
+
+<div class="card final" id="final">
+
+<h2>あなたの滞納者対応力</h2>
+
+<div class="score" id="finalScore"></div>
+
+<p id="finalText"></p>
+
+<button class="next" onclick="location.reload()">
+もう一度やる
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/*
+==================================================
+30人の滞納者
+==================================================
+
+1人につき3ターン。
+
+各ターン
+[発言, 真実かどうか, 管理会社メモ]
+
+*/
+
+const people = [
+
+/* 1 */
+
+{
+name:"佐藤さん",
+age:"32歳",
+job:"会社員",
+rent:"82,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"すみません……今月だけ給料の振込が遅れまして……。",
+true,
+"勤務先の給与支給日の変更が確認できた。"
+],
+[
+"来週の水曜日には入ると思います。",
+true,
+"具体的な入金予定日を本人が把握している。"
+],
+[
+"入ったらすぐ振り込みます。すみません。",
+true,
+"実際に水曜日に入金があり、その日のうちに家賃を支払った。"
+]
+]
+},
+
+
+/* 2 */
+
+{
+name:"田中さん",
+age:"41歳",
+job:"自営業",
+rent:"76,000円",
+history:"過去にも3回遅延",
+
+turns:[
+[
+"先月分なら、もう払ったと思いますよ。",
+false,
+"入金記録はない。"
+],
+[
+"妻が振り込んだはずなんですけど……。",
+false,
+"過去にも「妻が払った」と説明している。"
+],
+[
+"ちょっと妻に聞いてみますね。",
+false,
+"その後も入金はなく、妻に確認した形跡もない。"
+]
+]
+},
+
+
+/* 3 */
+
+{
+name:"山本さん",
+age:"58歳",
+job:"会社員",
+rent:"69,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"昨日、財布を落としちゃって……。",
+false,
+"財布を落としたこと自体は事実だったが、支払い能力は残っていた。"
+],
+[
+"カードも全部止めちゃったんで、銀行にも行けなくて。",
+false,
+"ネットバンキングなど別の支払い方法を確認すると話が曖昧になる。"
+],
+[
+"明日お金が返ってくるんで、それから払います。",
+false,
+"「誰から返ってくるのか」「いくら返ってくるのか」を聞くと説明が変わった。"
+]
+]
+},
+
+
+/* 4 */
+
+{
+name:"鈴木さん",
+age:"29歳",
+job:"会社員",
+rent:"74,000円",
+history:"過去の滞納1回",
+
+turns:[
+[
+"給料日は25日なんですけど……。",
+true,
+"給与支給日は25日で確認できる。"
+],
+[
+"今月は土日と重なって月曜日に入るんです。",
+true,
+"金融機関の営業日の関係で実際の入金日は月曜日。"
+],
+[
+"月曜日に入ったら、その日に払います。",
+true,
+"実際に月曜日に入金・支払いがあった。"
+]
+]
+},
+
+
+/* 5 */
+
+{
+name:"高橋さん",
+age:"46歳",
+job:"会社員",
+rent:"91,000円",
+history:"過去の滞納5回",
+
+turns:[
+[
+"今月ボーナスが出るので、そこから払います。",
+false,
+"過去にも同じ説明をしている。"
+],
+[
+"絶対大丈夫です。",
+false,
+"具体的な支払日を聞いても「ボーナスが出たら」としか答えない。"
+],
+[
+"ボーナス、たぶん来週です。",
+false,
+"支給日を確認しても曖昧。結局入金はなかった。"
+]
+]
+},
+
+
+/* 6 */
+
+{
+name:"伊藤さん",
+age:"37歳",
+job:"パート",
+rent:"65,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"子どもの学校関係で急な出費があって……。",
+true,
+"学校関連の支払いが確認できた。"
+],
+[
+"来週の給料日に払います。",
+true,
+"給与支給日は確認済み。"
+],
+[
+"給料が入ったらすぐ払います。",
+true,
+"実際に予定日に入金があった。"
+]
+]
+},
+
+
+/* 7 */
+
+{
+name:"中村さん",
+age:"52歳",
+job:"自営業",
+rent:"88,000円",
+history:"過去の滞納2回",
+
+turns:[
+[
+"取引先からの入金が遅れてるんです。",
+false,
+"過去にも同じ説明がある。"
+],
+[
+"来週には入ると思います。",
+false,
+"具体的な入金日がない。"
+],
+[
+"入ったらすぐ払いますから。",
+false,
+"過去にも「入ったら払う」と言い続けている。"
+]
+]
+},
+
+
+/* 8 */
+
+{
+name:"小林さん",
+age:"34歳",
+job:"会社員",
+rent:"79,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"あれ？もう振り込んだと思います。",
+true,
+"本人は本当に勘違いしていた。"
+],
+[
+"妻にも払っておいてって言ったんですけど……。",
+true,
+"妻が前日に振り込んでいた。"
+],
+[
+"あ、妻の名前で振り込まれてますね！",
+true,
+"入金名義が妻の名前だったため照合前だった。"
+]
+]
+},
+
+
+/* 9 */
+
+{
+name:"加藤さん",
+age:"44歳",
+job:"会社員",
+rent:"72,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"すみません、昨日振り込みましたよ。",
+false,
+"入金記録はない。"
+],
+[
+"夕方くらいだったと思います。",
+false,
+"振込明細の提示をお願いすると話が曖昧になる。"
+],
+[
+"いつもの口座に振り込んだはずです。",
+false,
+"実際には振込操作自体をしていなかった。"
+]
+]
+},
+
+
+/* 10 */
+
+{
+name:"吉田さん",
+age:"61歳",
+job:"年金生活",
+rent:"58,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"年金が入るのがいつもより遅くて……。",
+true,
+"年金の支給日を確認できた。"
+],
+[
+"15日に入るので、その日に払います。",
+true,
+"支給日と説明が一致。"
+],
+[
+"入ったらすぐ振り込みます。",
+true,
+"実際に15日に入金があった。"
+]
+]
+},
+
+
+/* 11 */
+
+{
+name:"井上さん",
+age:"39歳",
+job:"会社員",
+rent:"81,000円",
+history:"過去にも2回遅延",
+
+turns:[
+[
+"スマホを落としてまして〜。連絡できませんでした。",
+false,
+"何度電話しても出なかったが、保証人へ連絡した直後に本人から折り返し。"
+],
+[
+"スマホないと連絡できないじゃないですか。",
+false,
+"自宅電話・メール・SMSなど他の連絡手段があった。"
+],
+[
+"新しいスマホ買ったら払います。",
+false,
+"その後も具体的な支払予定は出てこなかった。"
+]
+]
+},
+
+
+/* 12 */
+
+{
+name:"森さん",
+age:"35歳",
+job:"会社員",
+rent:"78,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"昨日から病院にいまして……。",
+true,
+"入院の事実が確認できた。"
+],
+[
+"いつ退院できるかわからないんです。",
+true,
+"退院日は未定だった。"
+],
+[
+"兄弟に振り込みをお願いしてみます。",
+true,
+"兄弟に連絡し、実際に兄弟から入金があった。"
+]
+]
+},
+
+
+/* 13 */
+
+{
+name:"斎藤さん",
+age:"48歳",
+job:"自営業",
+rent:"95,000円",
+history:"過去にも4回遅延",
+
+turns:[
+[
+"取引先から明日入金されるんで。",
+false,
+"過去にも同じ説明を繰り返している。"
+],
+[
+"明日には絶対払います。",
+false,
+"過去にも「明日」と言って支払われていない。"
+],
+[
+"今回は本当ですから。",
+false,
+"結局、翌日になっても入金はなかった。"
+]
+]
+},
+
+
+/* 14 */
+
+{
+name:"清水さん",
+age:"27歳",
+job:"会社員",
+rent:"70,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"会社の給料日が今月から変わったんです。",
+true,
+"勤務先の給与支給日変更を確認。"
+],
+[
+"今月だけ家賃が間に合わなくて……。",
+true,
+"今回が初めての滞納。"
+],
+[
+"次の給料日に必ず払います。",
+true,
+"予定日に入金された。"
+]
+]
+},
+
+
+/* 15 */
+
+{
+name:"山口さん",
+age:"43歳",
+job:"会社員",
+rent:"83,000円",
+history:"過去にも3回遅延",
+
+turns:[
+[
+"家族が入院してしまって、急にお金が必要になったんです。",
+false,
+"家族の入院自体は事実だが、以前にも同じ理由を使っている。"
+],
+[
+"今月は病院代がすごくかかってまして。",
+false,
+"具体的な支払計画がない。"
+],
+[
+"来月にはなんとかします。",
+false,
+"「なんとかする」だけで具体的な日付がない。"
+]
+]
+},
+
+
+/* 16 */
+
+{
+name:"松本さん",
+age:"31歳",
+job:"会社員",
+rent:"75,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"すみません、本当に家賃のことを忘れてました。",
+true,
+"本人から自発的に連絡があった。"
+],
+[
+"気づいたので今日中に払います。",
+true,
+"支払方法を確認し、すぐに振込手続きをした。"
+],
+[
+"ご迷惑をおかけしてすみません。",
+true,
+"当日中に入金確認が取れた。"
+]
+]
+},
+
+
+/* 17 */
+
+{
+name:"石井さん",
+age:"55歳",
+job:"会社員",
+rent:"68,000円",
+history:"過去にも2回遅延",
+
+turns:[
+[
+"携帯料金を払えてなくて電話が止まってたんです。",
+false,
+"電話停止は事実だが、メールなど他の連絡手段はあった。"
+],
+[
+"だから連絡できなくて……。",
+false,
+"督促メールにも反応していない。"
+],
+[
+"電話が復活したら払います。",
+false,
+"具体的な支払予定はない。"
+]
+]
+},
+
+
+/* 18 */
+
+{
+name:"阿部さん",
+age:"40歳",
+job:"会社員",
+rent:"86,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"子どもの学校で急にまとまった集金があってしまって。",
+true,
+"学校関連の出費が確認できた。"
+],
+[
+"給料日までちょっと足りなくて……。",
+true,
+"一時的な資金不足。"
+],
+[
+"次の給料日に必ず払います。",
+true,
+"実際に給料日に支払われた。"
+]
+]
+},
+
+
+/* 19 */
+
+{
+name:"藤田さん",
+age:"50歳",
+job:"自営業",
+rent:"92,000円",
+history:"過去にも5回遅延",
+
+turns:[
+[
+"銀行のシステム障害で振り込みできなかったんですよ。",
+false,
+"その日に銀行の障害は発生していない。"
+],
+[
+"何回やってもエラーになって。",
+false,
+"振込操作をした形跡がない。"
+],
+[
+"復旧したら払います。",
+false,
+"その後も入金なし。"
+]
+]
+},
+
+
+/* 20 */
+
+{
+name:"岡田さん",
+age:"45歳",
+job:"会社員",
+rent:"77,000円",
+history:"過去にも1回遅延",
+
+turns:[
+[
+"昨日振り込みました。",
+false,
+"入金記録がない。"
+],
+[
+"明日には反映されると思います。",
+false,
+"振込明細を確認すると別口座への送金だった。"
+],
+[
+"あれ……口座間違えたかもしれません。",
+false,
+"説明が途中で変わった。"
+]
+]
+},
+
+
+/* 21 */
+
+{
+name:"前田さん",
+age:"38歳",
+job:"会社員",
+rent:"80,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"給料は入ったんですけど、口座を変更したばかりで……。",
+true,
+"給与振込口座の変更が確認できた。"
+],
+[
+"家賃の引き落とし口座だけ登録できてなかったみたいです。",
+true,
+"登録不備が確認された。"
+],
+[
+"今日中に振り込みます。",
+true,
+"その日のうちに入金された。"
+]
+]
+},
+
+
+/* 22 */
+
+{
+name:"藤井さん",
+age:"47歳",
+job:"自営業",
+rent:"89,000円",
+history:"過去にも3回遅延",
+
+turns:[
+[
+"今月ちょっと売上が悪くて……。",
+true,
+"売上減少自体は事実。"
+],
+[
+"でも来月には絶対払えます。",
+false,
+"具体的な資金計画がない。"
+],
+[
+"来月になればなんとかなると思います。",
+false,
+"過去にも同じ説明をしている。"
+]
+]
+},
+
+
+/* 23 */
+
+{
+name:"後藤さん",
+age:"33歳",
+job:"会社員",
+rent:"73,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"家賃の引き落とし口座を変更したばかりで。",
+true,
+"口座変更手続き中だった。"
+],
+[
+"うまく登録できてなかったみたいです。",
+true,
+"金融機関側の登録状況も一致。"
+],
+[
+"今日振り込みます。",
+true,
+"実際にすぐ入金された。"
+]
+]
+},
+
+
+/* 24 */
+
+{
+name:"村上さん",
+age:"56歳",
+job:"会社員",
+rent:"67,000円",
+history:"過去にも4回遅延",
+
+turns:[
+[
+"郵便物が届いてなくて、滞納してること自体知らなかったんです。",
+false,
+"電話・SMSでも複数回連絡している。"
+],
+[
+"本当に何も届いてないんですよ。",
+false,
+"電話履歴にも不在着信が残っている。"
+],
+[
+"知らなかったので、今から確認します。",
+false,
+"その後も入金はなかった。"
+]
+]
+},
+
+
+/* 25 */
+
+{
+name:"長谷川さん",
+age:"42歳",
+job:"パート",
+rent:"64,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"今月だけ勤務日数が減ってしまって。",
+true,
+"勤務先のシフト変更が確認できた。"
+],
+[
+"お給料が少なくなってしまいました。",
+true,
+"実際に給与額が減少していた。"
+],
+[
+"次の給料日に払います。",
+true,
+"予定日に入金された。"
+]
+]
+},
+
+
+/* 26 */
+
+{
+name:"石川さん",
+age:"36歳",
+job:"会社員",
+rent:"85,000円",
+history:"過去にも2回遅延",
+
+turns:[
+[
+"カードの限度額いっぱいになってしまって。",
+false,
+"カード利用と家賃支払いは別問題。"
+],
+[
+"他の支払いがいっぱいあって……。",
+false,
+"家賃を支払う資金計画が示されない。"
+],
+[
+"明日お金が入ってくるんで、払えると思います。",
+false,
+"「入ってくる」と言うだけで、入金元や金額が曖昧。結局支払いはなかった。"
+]
+]
+},
+
+
+/* 27 */
+
+{
+name:"中島さん",
+age:"60歳",
+job:"年金生活",
+rent:"59,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"年金の振込日を勘違いしてました。",
+true,
+"本人が支給日を勘違いしていた。"
+],
+[
+"今日だと思ってたんです。",
+true,
+"実際の支給日は翌日だった。"
+],
+[
+"明日入るので、明日払います。",
+true,
+"翌日に入金され、家賃も支払われた。"
+]
+]
+},
+
+
+/* 28 ★変な人 */
+
+{
+name:"青木さん",
+age:"49歳",
+job:"自営業",
+rent:"90,000円",
+history:"過去にも5回遅延",
+
+turns:[
+[
+"玄関の前に黒い人がいるんですよ。",
+true,
+"本人は本当にそう説明していた。"
+],
+[
+"あの人がいなくならないと、外に出られなくて……。",
+true,
+"本人は数日間外出していなかった。"
+],
+[
+"雨が降ったらいなくなると思います。",
+true,
+"本当に3日後の雨の日に入金があった。"
+]
+]
+},
+
+
+/* 29 ★変な人 */
+
+{
+name:"福田さん",
+age:"30歳",
+job:"会社員",
+rent:"71,000円",
+history:"過去の滞納なし",
+
+turns:[
+[
+"冷蔵庫から電波が出てるんですよ。",
+true,
+"本人は真剣に説明していた。"
+],
+[
+"それで体が固められて、動けなくなってました。",
+true,
+"本人はしばらく動けなかったと説明。"
+],
+[
+"今ちょうど動けるようになったんで、これから振り込みます。",
+true,
+"電話を切った直後、本当に入金があった。"
+]
+]
+},
+
+
+/* 30 ★変な人 */
+
+{
+name:"西村さん",
+age:"53歳",
+job:"会社員",
+rent:"84,000円",
+history:"過去にも3回遅延",
+
+turns:[
+[
+"あったはずのお金がなくなってるんですよ！",
+false,
+"本人は突然、現金が消えたと説明。"
+],
+[
+"泥棒が入ったのかもしれません。警察に通報します。",
+false,
+"警察への相談・通報をした形跡はない。"
+],
+[
+"警察が来るまで、家賃は払えないです。",
+false,
+"その後も警察への通報はなく、入金もなかった。"
+]
+]
+}
+
+];
+
+
+/*
+==================================================
+ランダムで5人選ぶ
+==================================================
+*/
+
+function shuffle(array){
+ return [...array].sort(()=>Math.random()-0.5);
+}
+
+let selected = shuffle(people).slice(0,5);
+
+let personIndex=0;
+let turnIndex=0;
+let score=0;
+
+
+/*
+==================================================
+表示
+==================================================
+*/
+
+function render(){
+
+ const p=selected[personIndex];
+ const t=p.turns[turnIndex];
+
+ document.getElementById("count").textContent=
+ `PERSON ${personIndex+1} / 5`;
+
+ document.getElementById("case").textContent=
+ `滞納者 ${personIndex+1}`;
+
+ document.getElementById("person").textContent=
+ p.name;
+
+ document.getElementById("info").innerHTML=
+ `
+ <div>年齢<b>${p.age}</b></div>
+ <div>職業<b>${p.job}</b></div>
+ <div>家賃<b>${p.rent}</b></div>
+ <div>滞納歴<b>${p.history}</b></div>
+ `;
+
+ document.getElementById("turn").textContent=
+ `会話 ${turnIndex+1} / 3`;
+
+ document.getElementById("dialogue").textContent=
+ t[0];
+
+ document.getElementById("game").style.display="block";
+ document.getElementById("result").style.display="none";
+ document.getElementById("final").style.display="none";
+}
+
+
+/*
+==================================================
+回答
+==================================================
+*/
+
+function answer(choice){
+
+ const p=selected[personIndex];
+ const t=p.turns[turnIndex];
+
+ const ok=choice===t[1];
+
+ if(ok){
+   score+=10;
+ }
+
+ document.getElementById("score").textContent=score;
+
+ document.getElementById("game").style.display="none";
+ document.getElementById("result").style.display="block";
+
+ document.getElementById("resultBig").className=
+ "big "+(ok?"correct":"wrong");
+
+ document.getElementById("resultBig").textContent=
+ ok ? "🎯 見抜いた！" : "😇 読み違えた！";
+
+ document.getElementById("resultReason").innerHTML=
+ `
+ 答えは <b>${t[1] ? "真実" : "嘘"}</b> でした。
+ `;
+
+ document.getElementById("explain").innerHTML=
+ `
+ <b>管理会社メモ</b><br>
+ ${t[2]}
+ `;
+
+ if(turnIndex<2){
+
+   document.querySelector(".next").textContent=
+   "さらに聞く →";
+
+ }else{
+
+   document.querySelector(".next").textContent=
+   personIndex<4
+   ?"次の滞納者へ →"
+   :"最終結果を見る →";
+ }
+}
+
+
+/*
+==================================================
+次へ
+==================================================
+*/
+
+function nextTurn(){
+
+ if(turnIndex<2){
+
+   turnIndex++;
+   render();
+
+ }else{
+
+   if(personIndex<4){
+
+     personIndex++;
+     turnIndex=0;
+     render();
+
+   }else{
+
+     showFinal();
+
+   }
+ }
+}
+
+
+/*
+==================================================
+最終結果
+==================================================
+*/
+
+function showFinal(){
+
+ document.getElementById("game").style.display="none";
+ document.getElementById("result").style.display="none";
+ document.getElementById("final").style.display="block";
+
+ document.getElementById("finalScore").textContent=
+ score+" / 150";
+
+ let text="";
+
+ if(score>=140){
+   text="完璧。あなた、滞納者の言い訳を聞きすぎています。";
+ }
+ else if(score>=120){
+   text="かなり鋭い。管理会社の電話担当として相当強い。";
+ }
+ else if(score>=100){
+   text="なかなかの嗅覚。でも、まだ信じすぎるところがあります。";
+ }
+ else if(score>=80){
+   text="人を信じる心が強すぎます。";
+ }
+ else if(score>=60){
+   text="その優しさ、滞納者には見抜かれています。";
+ }
+ else{
+   text="あなたは滞納者の言うことを全部信じてしまうタイプです。";
+ }
+
+ document.getElementById("finalText").textContent=text;
+}
+
+
+render();
+
+</script>
+
+</body>
+</html>
+```
