@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>この言い訳、信じる？</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f1eb;color:#292929;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}
+.wrap{max-width:560px;margin:auto;padding:20px 16px 40px}
+.header{text-align:center;padding:12px 0 16px}
+h1{font-size:28px;margin:4px 0 6px}
+.sub{font-size:13px;color:#777}
+.top{display:flex;justify-content:space-between;align-items:center;margin:8px 0 12px;font-size:13px;color:#666}
+.card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 5px 20px #00000012}
+.case{font-size:12px;color:#888;margin-bottom:8px}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.info div{background:#f5f3ef;border-radius:9px;padding:10px;font-size:13px}
+.info b{display:block;font-size:16px;margin-top:2px}
+.quote{margin:18px 0 22px;background:#292929;color:#fff;border-radius:14px;padding:18px;font-size:18px;line-height:1.8;position:relative}
+.quote:before{content:"入居者";display:block;color:#aaa;font-size:11px;margin-bottom:5px}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{border:0;border-radius:12px;padding:17px 8px;font-size:18px;font-weight:700;cursor:pointer}
+.truth{background:#dcefe2;color:#205d34}.lie{background:#f5dfe0;color:#8a2930}
+button:active{transform:scale(.98)}
+.result{display:none;text-align:center}
+.result .big{font-size:28px;font-weight:800;margin:4px}
+.correct{color:#25733f}.wrong{color:#a52d35}
+.explain{text-align:left;background:#f5f3ef;border-radius:12px;padding:14px;margin-top:16px;font-size:14px;line-height:1.7}
+.next{width:100%;background:#292929;color:#fff;margin-top:15px;font-size:16px}
+.final{display:none;text-align:center}.final h2{font-size:25px}.score{font-size:42px;font-weight:800}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="header">
+<h1>この言い訳、信じる？</h1>
+<div class="sub">家賃滞納者の一言を、直感で見抜け。</div>
+</div>
+
+<div class="top">
+<span id="count">CASE 1 / 10</span>
+<strong>スコア：<span id="score">0</span></strong>
+</div>
+
+<div class="card" id="game">
+<div class="case" id="case"></div>
+<div class="info" id="info"></div>
+<div class="quote" id="quote"></div>
+<div class="buttons">
+<button class="truth" onclick="answer(true)">🟢 真実</button>
+<button class="lie" onclick="answer(false)">🔴 嘘</button>
+</div>
+</div>
+
+<div class="card result" id="result">
+<div class="big" id="resultBig"></div>
+<div id="resultReason"></div>
+<div class="explain" id="explain"></div>
+<button class="next" onclick="next()">次の滞納者へ →</button>
+</div>
+
+<div class="card final" id="final">
+<h2>あなたの滞納者見抜き力</h2>
+<div class="score" id="finalScore"></div>
+<p id="finalText"></p>
+<button class="next" onclick="location.reload()">もう一度やる</button>
+</div>
+</div>
+
+<script>
+const cases=[
+["佐藤さん","32歳","会社員","82,000円","1か月","過去の滞納なし",
+"すみません、今月だけ会社の給与振込が遅れてまして……。来週の水曜日には必ず払います。",true,
+"過去3年間、遅延なし。今回だけ給与振込日がずれた記録があり、約束日も具体的。"],
+["田中さん","41歳","自営業","76,000円","2か月","過去にも3回遅延",
+"先月分なら、もう払ったと思いますよ。妻が振り込んだはずなんですけど……。",false,
+"入金記録はなし。過去にも「家族が払った」「振り込んだはず」という説明を繰り返している。"],
+["山本さん","58歳","会社員","69,000円","1か月","過去の滞納なし",
+"昨日、財布を落としちゃって……。カードも止めたので、銀行にも行けなかったんです。来週には払います。",false,
+"財布を落としたのは事実。ただしネットバンキングから振込できる状況で、支払い方法を確認すると話が曖昧になる。"],
+["鈴木さん","29歳","会社員","74,000円","1か月","過去の滞納1回",
+"給料日は25日なんですけど、今月は土日と重なって……。月曜日に入ると思います。",true,
+"給与日と金融機関の営業日の関係で入金日がずれるケース。説明にも一貫性がある。"],
+["高橋さん","46歳","会社員","91,000円","3か月","過去の滞納5回",
+"今月ボーナスが出るので、そこからまとめて払います。絶対大丈夫です。",false,
+"ボーナスの支給予定はあるが、過去にも同じ約束をして支払いがなかった。今回は「嘘」というより、約束を信用できないケース。"],
+["伊藤さん","37歳","パート","65,000円","1か月","過去の滞納なし",
+"子どもの学校関係で急な出費があって……。来週の給料日に必ず払います。",true,
+"過去の入金はすべて期日どおり。給料日も契約時の勤務先情報と整合している。"],
+["中村さん","52歳","自営業","88,000円","2か月","過去の滞納2回",
+"取引先からの入金が遅れてるんです。来週には入るので、そこから払います。",false,
+"「来週」としか言わず具体的な入金日がない。過去にも同じ説明があり、約束が守られていない。"],
+["小林さん","34歳","会社員","79,000円","1か月","過去の滞納なし",
+"あれ？もう振り込んだと思います。妻にも払っておいてって言ったんですけど……。",true,
+"本人の勘違い。確認すると妻が前日に振り込んでおり、入金名義が妻の名前だったため照合前だった。"],
+["加藤さん","44歳","会社員","72,000円","1か月","過去の滞納なし",
+"すみません、振り込みましたよ。昨日の夕方です。",false,
+"入金記録なし。振込先を聞くと「いつもの口座です」としか答えられず、明細の確認を避ける。"],
+["吉田さん","61歳","年金生活","58,000円","1か月","過去の滞納なし",
+"年金が入るのがいつもより遅くて……。来週の15日に入るので、その日にお支払いします。",true,
+"年金の支給日と本人の説明が一致。過去の支払い状況も良好。"]
+];
+
+let i=0,score=0;
+function render(){
+ const c=cases[i];
+ document.getElementById("count").textContent=`CASE ${i+1} / ${cases.length}`;
+ document.getElementById("case").textContent=`入居者：${c[0]}`;
+ document.getElementById("info").innerHTML=
+ `<div>年齢<b>${c[1]}</b></div><div>職業<b>${c[2]}</b></div>
+  <div>家賃<b>${c[3]}</b></div><div>滞納<b>${c[4]}</b></div>
+  <div style="grid-column:1/-1">過去の滞納<b>${c[5]}</b></div>`;
+ document.getElementById("quote").textContent=c[6];
+ document.getElementById("game").style.display="block";
+ document.getElementById("result").style.display="none";
+ document.getElementById("final").style.display="none";
+}
+function answer(choice){
+ const c=cases[i], ok=choice===c[7];
+ if(ok)score+=10;
+ document.getElementById("score").textContent=score;
+ document.getElementById("game").style.display="none";
+ document.getElementById("result").style.display="block";
+ document.getElementById("resultBig").className="big "+(ok?"correct":"wrong");
+ document.getElementById("resultBig").textContent=ok?"🎯 正解！":"😇 残念！";
+ document.getElementById("resultReason").innerHTML=`答えは <b>${c[7]?"真実":"嘘"}</b> でした。`;
+ document.getElementById("explain").innerHTML=`<b>管理会社メモ</b><br>${c[8]}`;
+ document.querySelector(".next").textContent=i===cases.length-1?"結果を見る →":"次の滞納者へ →";
+}
+function next(){
+ if(i<cases.length-1){i++;render();}else{
+  document.getElementById("result").style.display="none";
+  document.getElementById("final").style.display="block";
+  document.getElementById("finalScore").textContent=score+" / 100";
+  document.getElementById("finalText").textContent=
+   score===100?"完璧。もう滞納者の声が聞こえる。":score>=80?"かなり鋭い。管理会社向きの嗅覚です。":
+   score>=60?"なかなか。もう少しだけ疑ってもいいかも。":"まだまだ新人。電話を100本くらい受けよう。";
+ }
+}
+render();
+</script>
+</body>
+</html>
