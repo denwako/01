@@ -7,7 +7,9 @@
 <title>滞納者に払わせろ！</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
@@ -25,16 +27,16 @@ body{
 
 .header{
   text-align:center;
-  padding:10px 0 18px;
+  padding:18px 0 18px;
 }
 
 h1{
   font-size:30px;
-  margin:4px 0 7px;
+  margin:4px 0 8px;
 }
 
 .sub{
-  font-size:13px;
+  font-size:14px;
   color:#777;
 }
 
@@ -54,16 +56,31 @@ h1{
   box-shadow:0 5px 20px #00000012;
 }
 
-.case{
-  font-size:13px;
-  color:#888;
-  margin-bottom:5px;
+.progress{
+  height:7px;
+  background:#e5e1da;
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:18px;
 }
 
-.name{
-  font-size:23px;
+.progressBar{
+  height:100%;
+  background:#292929;
+  width:0%;
+  transition:.3s;
+}
+
+.person{
+  font-size:24px;
   font-weight:800;
-  margin-bottom:12px;
+  margin-bottom:4px;
+}
+
+.personMeta{
+  color:#777;
+  font-size:13px;
+  margin-bottom:16px;
 }
 
 .info{
@@ -86,15 +103,21 @@ h1{
   margin-top:3px;
 }
 
+.turn{
+  font-size:13px;
+  font-weight:bold;
+  color:#888;
+  margin:18px 0 8px;
+}
+
 .quote{
-  margin:18px 0;
+  margin:0 0 18px;
   background:#292929;
   color:#fff;
   border-radius:14px;
   padding:18px;
   font-size:17px;
-  line-height:1.8;
-  position:relative;
+  line-height:1.75;
 }
 
 .quote:before{
@@ -105,63 +128,60 @@ h1{
   margin-bottom:5px;
 }
 
-.question{
+.questionTitle{
+  font-size:15px;
   font-weight:800;
-  font-size:16px;
   margin:18px 0 10px;
 }
 
-.choices{
+.options{
   display:grid;
-  gap:10px;
+  gap:9px;
 }
 
-.choice{
-  border:0;
-  border-radius:12px;
-  padding:15px 13px;
-  font-size:15px;
-  font-weight:700;
+.option{
+  width:100%;
   text-align:left;
-  cursor:pointer;
-  background:#f1eee8;
-  color:#292929;
+  background:#f5f3ef;
+  border:2px solid transparent;
+  border-radius:12px;
+  padding:14px;
+  font-size:14px;
   line-height:1.5;
+  cursor:pointer;
 }
 
-.choice:hover{
-  background:#e8e3da;
+.option:hover{
+  border-color:#aaa;
 }
 
-.choice:active{
+.option:active{
   transform:scale(.98);
 }
 
 .result{
   display:none;
-  text-align:center;
 }
 
-.resultBig{
-  font-size:27px;
+.resultTitle{
+  font-size:23px;
   font-weight:800;
-  margin:5px;
+  margin-bottom:10px;
 }
 
-.resultReason{
-  font-size:15px;
-  margin:10px 0;
-  line-height:1.6;
-}
-
-.explain{
-  text-align:left;
-  background:#f5f3ef;
-  border-radius:12px;
-  padding:14px;
-  margin-top:15px;
-  font-size:14px;
+.resultText{
   line-height:1.7;
+  font-size:14px;
+}
+
+.bad{
+  color:#a52d35;
+  font-weight:bold;
+}
+
+.good{
+  color:#25733f;
+  font-weight:bold;
 }
 
 .next{
@@ -171,9 +191,9 @@ h1{
   border:0;
   border-radius:12px;
   padding:16px;
-  margin-top:15px;
+  margin-top:16px;
   font-size:16px;
-  font-weight:700;
+  font-weight:bold;
   cursor:pointer;
 }
 
@@ -187,41 +207,55 @@ h1{
 }
 
 .finalScore{
-  font-size:42px;
+  font-size:44px;
   font-weight:800;
-  margin:10px;
+  margin:12px 0;
 }
 
-.finalStats{
+.finalBox{
   background:#f5f3ef;
-  border-radius:14px;
+  border-radius:12px;
   padding:15px;
   margin-top:15px;
-  text-align:left;
   line-height:2;
+  text-align:left;
 }
 
-.restart{
+.start{
+  text-align:center;
+}
+
+.startText{
+  font-size:14px;
+  line-height:1.8;
+  color:#666;
+}
+
+.startButton{
   width:100%;
+  border:0;
+  border-radius:14px;
+  padding:17px;
   background:#292929;
   color:#fff;
-  border:0;
-  border-radius:12px;
-  padding:16px;
-  margin-top:18px;
-  font-size:16px;
-  font-weight:700;
+  font-size:17px;
+  font-weight:bold;
   cursor:pointer;
+  margin-top:15px;
 }
 
 .badge{
   display:inline-block;
-  background:#292929;
-  color:#fff;
-  border-radius:20px;
-  padding:5px 10px;
   font-size:11px;
-  margin-bottom:10px;
+  padding:4px 8px;
+  border-radius:20px;
+  background:#eee;
+  color:#666;
+  margin-top:5px;
+}
+
+.hidden{
+  display:none;
 }
 </style>
 </head>
@@ -230,83 +264,138 @@ h1{
 
 <div class="wrap">
 
-<div class="header">
-  <h1>滞納者に払わせろ！</h1>
-  <div class="sub">言い訳に負けるな。3ターンで支払日を引き出せ。</div>
-</div>
+  <!-- =========================
+       タイトル
+  ========================== -->
 
-<div class="top">
-  <span id="progress">入居者 1 / 5　｜　TURN 1 / 3</span>
-  <strong>評価：<span id="score">0</span></strong>
-</div>
-
-<div class="card" id="game">
-
-  <div class="case" id="case"></div>
-  <div class="name" id="name"></div>
-
-  <div class="info" id="info"></div>
-
-  <div class="quote" id="quote"></div>
-
-  <div class="question" id="question">
-    どう対応する？
+  <div class="header">
+    <h1>滞納者に払わせろ！</h1>
+    <div class="sub">
+      言い訳に負けずに、3ターンで支払日を引き出せ。
+    </div>
   </div>
 
-  <div class="choices" id="choices"></div>
 
-</div>
+  <!-- =========================
+       スタート画面
+  ========================== -->
 
+  <div class="card start" id="start">
 
-<div class="card result" id="result">
+    <h2>家賃滞納対応ゲーム</h2>
 
-  <div class="resultBig" id="resultBig"></div>
-
-  <div class="resultReason" id="resultReason"></div>
-
-  <div class="explain" id="explain"></div>
-
-  <button class="next" id="nextButton" onclick="nextTurn()">
-    次へ →
-  </button>
-
-</div>
-
-
-<div class="card final" id="final">
-
-  <div class="badge">GAME CLEAR</div>
-
-  <h2>🏆 あなたの滞納対応力</h2>
-
-  <div class="finalScore" id="finalScore"></div>
-
-  <div class="finalStats">
-
-    <div>
-      💰 支払日を引き出した回数：
-      <strong><span id="paymentCount"></span> / 5</strong>
+    <div class="startText">
+      あなたは賃貸管理会社の担当者。<br>
+      滞納者の言い訳を聞きながら、<br>
+      <b>3ターン以内に具体的な支払日を引き出してください。</b>
+      <br><br>
+      普通の滞納者もいれば、<br>
+      とんでもないことを言い出す滞納者もいます。
+      <br><br>
+      ただし――<br>
+      <b>変な人だからといって、嘘とは限りません。</b>
     </div>
 
-    <div>
-      ❓ 無駄な質問：
-      <strong><span id="wasteCount"></span>回</strong>
-    </div>
-
-    <div>
-      🌀 滞納者に振り回された回数：
-      <strong><span id="confusedCount"></span>回</strong>
-    </div>
+    <button class="startButton" onclick="startGame()">
+      滞納者対応を開始する
+    </button>
 
   </div>
 
-  <p id="finalText"></p>
 
-  <button class="restart" onclick="location.reload()">
-    もう一度やる
-  </button>
+  <!-- =========================
+       ゲーム画面
+  ========================== -->
 
-</div>
+  <div id="game" class="hidden">
+
+    <div class="top">
+      <span id="personCount">滞納者 1 / 5</span>
+      <strong>
+        支払日 <span id="paymentCount">0</span> / 5
+      </strong>
+    </div>
+
+    <div class="progress">
+      <div class="progressBar" id="progressBar"></div>
+    </div>
+
+    <div class="card">
+
+      <div class="person" id="personName"></div>
+
+      <div class="personMeta" id="personMeta"></div>
+
+      <div class="info" id="personInfo"></div>
+
+      <div class="turn" id="turn"></div>
+
+      <div class="quote" id="quote"></div>
+
+      <div class="questionTitle">
+        どう聞く？
+      </div>
+
+      <div class="options" id="options"></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       ターン結果
+  ========================== -->
+
+  <div class="card result" id="result">
+
+    <div class="resultTitle" id="resultTitle"></div>
+
+    <div class="resultText" id="resultText"></div>
+
+    <button class="next" id="nextButton" onclick="nextTurn()">
+      次へ →
+    </button>
+
+  </div>
+
+
+  <!-- =========================
+       最終結果
+  ========================== -->
+
+  <div class="card final" id="final">
+
+    <h2>🏆 あなたの滞納対応力</h2>
+
+    <div class="finalScore" id="finalScore"></div>
+
+    <div class="finalBox">
+
+      <div>
+        支払日を引き出した回数：
+        <b id="finalPayment"></b>
+      </div>
+
+      <div>
+        無駄な質問：
+        <b id="finalWaste"></b>回
+      </div>
+
+      <div>
+        滞納者に振り回された回数：
+        <b id="finalTrouble"></b>回
+      </div>
+
+    </div>
+
+    <p id="finalText"></p>
+
+    <button class="next" onclick="location.reload()">
+      もう一度やる
+    </button>
+
+  </div>
 
 </div>
 
@@ -314,1595 +403,2636 @@ h1{
 <script>
 
 /*
-====================================================
-滞納者データ
-50人
-====================================================
+==================================================
+滞納者50人
+==================================================
 
-name
-age
-job
-rent
-delay
-history
-opening
-turns
+type
+normal = 普通
+weird  = ちょっと変
+crazy  = かなり変
 
-turns:
-  question
-  choices
+willPay
+true  = 最終的には払う
+false = 最終的には払わない
 
-choice:
-  text
-  effect
-    payment = 支払日を引き出す
-    waste = 無駄な質問
-    confused = 振り回される
-    normal = 特に変化なし
+各人物は3ターン。
 
-  reply
-  nextQuestion
+質問
+A / B / C
+
+good = 支払日を引き出すために有効
+waste = 無駄な質問
+bad = 話がそれる
+
+==================================================
 */
-
 
 const cases = [
 
-/* =========================
-普通の滞納者
-========================= */
+/* ===== 普通 ===== */
 
 {
-name:"佐藤さん",age:"32歳",job:"会社員",rent:"82,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"すみません……今月ちょっと厳しくて。来週には払えると思います。",
+name:"佐藤さん",
+age:"32歳",
+job:"会社員",
+rent:"82,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
 {
-question:"まず何を確認する？",
-choices:[
-{text:"来週とは具体的に何日ですか？",effect:"payment",reply:"えっと……来週の水曜日です。水曜日には払います。"},
-{text:"何にお金を使ったんですか？",effect:"waste",reply:"いろいろです……。"},
-{text:"本当に払う気はありますか？",effect:"confused",reply:"ありますけど……。"}
-]},
+quote:"すみません、今月ちょっと給料が遅れてまして……。",
+options:[
+["給料が遅れた理由を詳しく聞く","waste"],
+["では、いつ給与が入りますか？","good"],
+["会社名を教えてください","waste"]
+]
+},
 {
-question:"支払日は聞けた。もう一歩詰めるなら？",
-choices:[
-{text:"水曜日の何時頃までに振り込めますか？",effect:"payment",reply:"仕事が終わってからになりますが、水曜日中には振り込みます。"},
-{text:"給料はいくらですか？",effect:"waste",reply:"それはちょっと……。"},
-{text:"誰かに借りられませんか？",effect:"normal",reply:"できれば自分で払いたいです。"}
-]},
+quote:"来週には入ると思います。",
+options:[
+["「来週」の何日に入りますか？","good"],
+["本当に給料は遅れているんですか？","waste"],
+["会社に確認してみましょうか？","bad"]
+]
+},
 {
-question:"最後に何を伝える？",
-choices:[
-{text:"では、水曜日の入金を確認します。",effect:"payment",reply:"はい。水曜日に必ず振り込みます。"},
-{text:"払えなかったらどうします？",effect:"confused",reply:"……そのときはまた相談します。"},
-{text:"とにかく早くしてください。",effect:"normal",reply:"はい……。"}
-]}
+quote:"水曜日です。水曜日には払えます。",
+options:[
+["では、水曜日のお支払いでお願いします","pay"],
+["なぜ水曜日なんですか？","waste"],
+["木曜日でもいいですよ","bad"]
 ]
+}
+]
 },
 
 {
-name:"田中さん",age:"41歳",job:"自営業",rent:"76,000円",
-delay:"2か月",history:"過去にも3回遅延",
-opening:"先月分なら、もう払ったと思いますよ。妻が振り込んだはずなんですけど。",
+name:"田中さん",
+age:"41歳",
+job:"自営業",
+rent:"76,000円",
+arrears:"2か月",
+type:"normal",
+willPay:false,
 turns:[
 {
-question:"どう確認する？",
-choices:[
-{text:"振込日と名義を確認させてください。",effect:"payment",reply:"……ちょっと確認します。たぶん先月末です。"},
-{text:"奥さんに電話してください。",effect:"normal",reply:"今は連絡がつかないです。"},
-{text:"じゃあ払ったことにします。",effect:"confused",reply:"そうですよね。払ってるはずなので。"}
-]},
+quote:"今ちょっと売上が悪くて……。",
+options:[
+["売上の状況を詳しく教えてください","waste"],
+["いつなら家賃を支払えますか？","good"],
+["大変ですね","bad"]
+]
+},
 {
-question:"入金記録がない。どうする？",
-choices:[
-{text:"未入金です。今日中に支払えるか確認してください。",effect:"payment",reply:"今日ですか……。じゃあ確認してみます。"},
-{text:"奥さんが忘れたんでしょうね。",effect:"waste",reply:"そうかもしれません。"},
-{text:"銀行に問い合わせてください。",effect:"normal",reply:"わかりました。"}
-]},
+quote:"来月になれば何とかなると思います。",
+options:[
+["来月の何日なら支払えますか？","good"],
+["何とかなるというのはどういう意味ですか？","waste"],
+["では来月まで待ちます","bad"]
+]
+},
 {
-question:"支払日を確定させたい。",
-choices:[
-{text:"では、何月何日に振り込めますか？",effect:"payment",reply:"……明後日までには振り込みます。"},
-{text:"奥さんに任せますか？",effect:"waste",reply:"まあ……そうですね。"},
-{text:"また確認して連絡ください。",effect:"confused",reply:"はい……。"}
-]}
+quote:"……まだちょっと分からないです。",
+options:[
+["支払える日を具体的に決めてもらえますか？","payfalse"],
+["ではまた来月連絡ください","bad"],
+["売上が増える予定はありますか？","waste"]
+]
+}
 ]
 },
 
 {
-name:"鈴木さん",age:"29歳",job:"会社員",rent:"74,000円",
-delay:"1か月",history:"過去の滞納1回",
-opening:"給料日が25日なんですけど、今月は土日と重なってしまって……。",
+name:"鈴木さん",
+age:"29歳",
+job:"会社員",
+rent:"74,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
 {
-question:"何を聞く？",
-choices:[
-{text:"給与の入金日は何日ですか？",effect:"payment",reply:"月曜日の26日です。"},
-{text:"会社はどこですか？",effect:"waste",reply:"そこまで言わないとダメですか？"},
-{text:"給料はいくらですか？",effect:"waste",reply:"それは関係ないですよね。"}
-]},
+quote:"給料日が今月だけずれたんです。",
+options:[
+["では、給料はいつ入りますか？","good"],
+["なぜずれたんですか？","waste"],
+["会社に確認します","bad"]
+]
+},
 {
-question:"入金日が26日と分かった。次は？",
-choices:[
-{text:"26日に入金確認後、家賃を振り込めますか？",effect:"payment",reply:"はい。26日に振り込みます。"},
-{text:"土日は何をしていましたか？",effect:"waste",reply:"普通に家にいました。"},
-{text:"もっと早く払えないんですか？",effect:"normal",reply:"給料日前なので厳しいです。"}
-]},
+quote:"25日です。",
+options:[
+["25日に支払えますか？","good"],
+["25日まで待てばいいんですね","bad"],
+["給料はいくらですか？","waste"]
+]
+},
 {
-question:"最後の確認。",
-choices:[
-{text:"では26日を支払日として記録します。",effect:"payment",reply:"はい、お願いします。"},
-{text:"もし払えなかったら？",effect:"confused",reply:"そのときは……また連絡します。"},
-{text:"ちゃんと覚えておいてください。",effect:"normal",reply:"わかりました。"}
-]}
+quote:"はい、25日に払います。",
+options:[
+["承知しました。25日のお支払いでお願いします","pay"],
+["どうやって払いますか？","waste"],
+["本当に大丈夫ですか？","waste"]
 ]
+}
+]
 },
 
 {
-name:"高橋さん",age:"46歳",job:"会社員",rent:"91,000円",
-delay:"3か月",history:"過去の滞納5回",
-opening:"今月ボーナスが出るので、そこからまとめて払います。絶対大丈夫です。",
+name:"高橋さん",
+age:"46歳",
+job:"会社員",
+rent:"91,000円",
+arrears:"3か月",
+type:"normal",
+willPay:false,
 turns:[
 {
-question:"何を聞く？",
-choices:[
-{text:"ボーナスの支給日はいつですか？",effect:"payment",reply:"月末です。"},
-{text:"ボーナスはいくらですか？",effect:"waste",reply:"まだ分かりません。"},
-{text:"絶対って本当ですか？",effect:"normal",reply:"はい。"}
-]},
+quote:"ボーナスが出れば払えるんですけど……。",
+options:[
+["ボーナスはいつ出ますか？","good"],
+["いくらくらい出ますか？","waste"],
+["ボーナスが出るまで待ちます","bad"]
+]
+},
 {
-question:"月末と言われた。どう詰める？",
-choices:[
-{text:"月末の何日に振り込まれますか？",effect:"payment",reply:"28日です。"},
-{text:"過去にも約束を破っていますよね？",effect:"confused",reply:"……そうですけど。"},
-{text:"ボーナスが出なかったらどうします？",effect:"normal",reply:"そのときは考えます。"}
-]},
+quote:"たぶん今月末です。",
+options:[
+["今月末の何日に支払えますか？","good"],
+["たぶん、というのは？","waste"],
+["では月末にお願いします","bad"]
+]
+},
 {
-question:"最後に。",
-choices:[
-{text:"では28日に全額支払うということでお願いします。",effect:"payment",reply:"はい……28日に払います。"},
-{text:"本当にお願いしますよ。",effect:"normal",reply:"はい。"},
-{text:"ボーナスの明細を見せてください。",effect:"waste",reply:"そこまでは……。"}
-]}
+quote:"ちょっとまだ分からないですね。",
+options:[
+["具体的な支払日を決めてください","payfalse"],
+["また分かったら連絡ください","bad"],
+["ボーナスの査定について聞く","waste"]
+]
+}
 ]
 },
 
 {
-name:"伊藤さん",age:"37歳",job:"パート",rent:"65,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"子どもの学校関係で急な出費があって……。来週の給料日に払います。",
+name:"伊藤さん",
+age:"37歳",
+job:"パート",
+rent:"65,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
 {
-question:"確認するなら？",
-choices:[
-{text:"給料日は何日ですか？",effect:"payment",reply:"15日です。"},
-{text:"学校で何があったんですか？",effect:"waste",reply:"教材費とかです。"},
-{text:"お子さんは何人ですか？",effect:"waste",reply:"二人ですけど……。"}
-]},
+quote:"子どもの学校関係で急な出費があって……。",
+options:[
+["いつなら家賃を支払えますか？","good"],
+["何にいくら使ったんですか？","waste"],
+["それは大変でしたね","bad"]
+]
+},
 {
-question:"15日と分かった。",
-choices:[
-{text:"15日に振り込めますか？",effect:"payment",reply:"はい、15日に必ず。"},
-{text:"教材費はいくらでした？",effect:"waste",reply:"結構かかりました。"},
-{text:"誰かに借りる予定は？",effect:"normal",reply:"大丈夫です。"}
-]},
+quote:"来週の給料日なら払えます。",
+options:[
+["給料日は何日ですか？","good"],
+["来週なら大丈夫ですね","bad"],
+["学校に確認しましょうか？","waste"]
+]
+},
 {
-question:"最後の確認。",
-choices:[
-{text:"では15日を支払日としてお願いします。",effect:"payment",reply:"わかりました。"},
-{text:"絶対ですよ。",effect:"normal",reply:"はい。"},
-{text:"学校に確認してもいいですか？",effect:"confused",reply:"えっ……そこまで？"}
-]}
+quote:"17日です。17日に払います。",
+options:[
+["承知しました。17日のお支払いでお願いします","pay"],
+["学校関係の出費について詳しく","waste"],
+["18日でもいいですよ","bad"]
 ]
+}
+]
 },
-
-/* =========================
-普通＋少し怪しい
-========================= */
 
 {
-name:"中村さん",age:"52歳",job:"自営業",rent:"88,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"取引先からの入金が遅れてるんです。来週には入るので。",
+name:"中村さん",
+age:"52歳",
+job:"自営業",
+rent:"88,000円",
+arrears:"2か月",
+type:"normal",
+willPay:false,
 turns:[
 {
-question:"何を聞く？",
-choices:[
-{text:"取引先からの入金予定日は何日ですか？",effect:"payment",reply:"……来週の木曜日です。"},
-{text:"取引先はどこですか？",effect:"waste",reply:"それはちょっと。"},
-{text:"売上はいくらですか？",effect:"waste",reply:"関係ないですよね。"}
-]},
+quote:"取引先からの入金が遅れてるんです。",
+options:[
+["その入金はいつありますか？","good"],
+["どこの会社ですか？","waste"],
+["それは困りますね","bad"]
+]
+},
 {
-question:"木曜日と分かった。",
-choices:[
-{text:"木曜日に入金されたら、その日に家賃を振り込めますか？",effect:"payment",reply:"はい。その日に払います。"},
-{text:"もし入金されなかったら？",effect:"normal",reply:"そのときは……また考えます。"},
-{text:"取引先に今電話してください。",effect:"confused",reply:"今は無理です。"}
-]},
+quote:"来週には入ると思います。",
+options:[
+["来週の何日に入りますか？","good"],
+["本当に入るんですか？","waste"],
+["では来週まで待ちます","bad"]
+]
+},
 {
-question:"もう一度、具体化する。",
-choices:[
-{text:"では、木曜日を支払予定日としてお願いします。",effect:"payment",reply:"わかりました。"},
-{text:"本当に大丈夫ですか？",effect:"normal",reply:"大丈夫です。"},
-{text:"明日払えませんか？",effect:"waste",reply:"それは無理です。"}
-]}
+quote:"まだ確定してないんですよね。",
+options:[
+["支払日を決めることはできますか？","payfalse"],
+["確定したら連絡してください","bad"],
+["取引先との契約内容を聞く","waste"]
 ]
+}
+]
 },
 
 {
-name:"吉田さん",age:"61歳",job:"年金生活",rent:"58,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"年金が入るのがいつもより遅くて……。15日に入るので、その日に払います。",
+name:"小林さん",
+age:"34歳",
+job:"会社員",
+rent:"79,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
 {
-question:"何を確認する？",
-choices:[
-{text:"15日に入金されることは確認できますか？",effect:"payment",reply:"はい。年金の支給日は15日です。"},
-{text:"年金はいくらですか？",effect:"waste",reply:"それはちょっと……。"},
-{text:"生活費は足りますか？",effect:"waste",reply:"なんとかしています。"}
-]},
+quote:"あれ？もう払ったと思うんですけど……。",
+options:[
+["振込日と名義を確認していただけますか？","good"],
+["奥様に聞いてみてください","bad"],
+["本当に払いました？","waste"]
+]
+},
 {
-question:"支給日が確認できた。",
-choices:[
-{text:"では15日に家賃を振り込めますか？",effect:"payment",reply:"はい、振り込みます。"},
-{text:"年金以外に収入は？",effect:"waste",reply:"ありません。"},
-{text:"今日少しだけ払えませんか？",effect:"normal",reply:"今は難しいです。"}
-]},
+quote:"妻が振り込んだかもしれません。",
+options:[
+["確認して、いつ振り込んだか教えてください","good"],
+["奥様の口座を見せてください","waste"],
+["では大丈夫ですね","bad"]
+]
+},
 {
-question:"最後に。",
-choices:[
-{text:"では15日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"忘れないでくださいね。",effect:"normal",reply:"わかりました。"},
-{text:"15日の朝に電話しましょうか？",effect:"waste",reply:"そこまでしなくても……。"}
-]}
+quote:"昨日振り込んでました。すみません。",
+options:[
+["確認できたので大丈夫です","pay"],
+["なぜ忘れたんですか？","waste"],
+["今後気をつけてください","bad"]
+]
+}
 ]
 },
 
 {
-name:"小林さん",age:"34歳",job:"会社員",rent:"79,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"あれ？もう振り込んだと思います。妻にも払っておいてって言ったんですけど……。",
+name:"加藤さん",
+age:"44歳",
+job:"会社員",
+rent:"72,000円",
+arrears:"1か月",
+type:"normal",
+willPay:false,
 turns:[
 {
-question:"どう確認する？",
-choices:[
-{text:"振込名義と振込日を確認してください。",effect:"payment",reply:"妻に聞いてみます。"},
-{text:"奥さんは何歳ですか？",effect:"waste",reply:"なんでですか？"},
-{text:"もう一度払ってください。",effect:"normal",reply:"二重払いになりませんか？"}
-]},
+quote:"昨日振り込みましたよ。",
+options:[
+["振込先と振込時間を確認してもらえますか？","good"],
+["昨日ですか？","waste"],
+["では大丈夫ですね","bad"]
+]
+},
 {
-question:"妻が振り込んだ可能性がある。",
-choices:[
-{text:"まず奥様に振込履歴を確認してもらえますか？",effect:"payment",reply:"はい。……あ、昨日振り込んでました。"},
-{text:"銀行に電話してください。",effect:"normal",reply:"はい。"},
-{text:"奥さんに怒ってください。",effect:"waste",reply:"なんでですか（笑）"}
-]},
+quote:"いつもの口座です。",
+options:[
+["振込明細は確認できますか？","good"],
+["いつもの口座とはどこですか？","waste"],
+["もう一度振り込んでもらえますか？","bad"]
+]
+},
 {
-question:"入金が確認できた。",
-choices:[
-{text:"確認できました。今回は入金済みとして処理します。",effect:"payment",reply:"すみませんでした。"},
-{text:"次から気をつけてください。",effect:"normal",reply:"はい。"},
-{text:"奥さんにもっと強く言ってください。",effect:"waste",reply:"私から言っておきます……。"}
-]}
+quote:"……ちょっと明細は分からないです。",
+options:[
+["では、いつまでに確認できますか？","payfalse"],
+["確認できたら連絡ください","bad"],
+["銀行に電話してください","waste"]
 ]
+}
+]
 },
-
-/* =========================
-変な人
-========================= */
 
 {
-name:"井上さん",age:"39歳",job:"会社員",rent:"81,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"玄関前に黒い人がいて……出かけるのを邪魔してくるんです。あの人がいなくなったら払えます。",
+name:"吉田さん",
+age:"61歳",
+job:"年金生活",
+rent:"58,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
 {
-question:"どう対応する？",
-choices:[
-{text:"いつなら外に出られそうですか？",effect:"payment",reply:"雨が降ったらいなくなるはずです。3日後くらいかな。"},
-{text:"黒い人とは誰ですか？",effect:"waste",reply:"黒い人です。"},
-{text:"警察に連絡してください。",effect:"normal",reply:"警察は関係ないです。"}
-]},
+quote:"年金が入るのがいつもより遅くて……。",
+options:[
+["年金はいつ入りますか？","good"],
+["なぜ遅れたんですか？","waste"],
+["年金事務所に電話しましょうか？","bad"]
+]
+},
 {
-question:"3日後と言われた。",
-choices:[
-{text:"では3日後に支払えますか？",effect:"payment",reply:"雨が降れば出られるので、払います。"},
-{text:"本当に黒い人がいますか？",effect:"waste",reply:"いますよ。"},
-{text:"今すぐ払えませんか？",effect:"normal",reply:"外に出られないので……。"}
-]},
+quote:"15日に入ります。",
+options:[
+["15日に家賃を支払えますか？","good"],
+["15日なら大丈夫ですね","bad"],
+["年金はいくらですか？","waste"]
+]
+},
 {
-question:"最後に確認する。",
-choices:[
-{text:"では3日後を支払予定日として記録します。",effect:"payment",reply:"はい。雨が降ったら振り込みます。"},
-{text:"雨が降らなかったらどうします？",effect:"confused",reply:"その場合は……黒い人がまだいるので……。"},
-{text:"とにかくお願いします。",effect:"normal",reply:"はい。"}
-]}
+quote:"はい、15日に払います。",
+options:[
+["承知しました。15日のお支払いでお願いします","pay"],
+["では15日まで待ちます","bad"],
+["本当に払えますか？","waste"]
 ]
+}
+]
 },
 
 {
-name:"山本さん",age:"58歳",job:"会社員",rent:"69,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"冷蔵庫から電波が出ていて、体が固められていたんです。今から支払いに行きます。",
+name:"森さん",
+age:"35歳",
+job:"会社員",
+rent:"78,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
 {
-question:"まず何を聞く？",
-choices:[
-{text:"今から支払いに行けるということですね？",effect:"payment",reply:"はい。もう動けます。"},
-{text:"冷蔵庫のメーカーは？",effect:"waste",reply:"そこは関係ないでしょう。"},
-{text:"病院には行きましたか？",effect:"normal",reply:"行ってません。"}
-]},
+quote:"昨日まで入院していて、連絡できませんでした。",
+options:[
+["退院されたなら、いつ支払えますか？","good"],
+["何の病気ですか？","waste"],
+["大変でしたね","bad"]
+]
+},
 {
-question:"今から払えると言っている。",
-choices:[
-{text:"では、本日中に振り込めますか？",effect:"payment",reply:"はい。今から行きます。"},
-{text:"電波は何Hzですか？",effect:"waste",reply:"分かりません。"},
-{text:"また体が固まったらどうします？",effect:"confused",reply:"そのときは……。"}
-]},
+quote:"今日なら振り込めます。",
+options:[
+["では本日のお支払いでお願いします","pay"],
+["病院はどこですか？","waste"],
+["本当に今日ですか？","waste"]
+]
+},
 {
-question:"最後。",
-choices:[
-{text:"では本日中の入金をお願いします。",effect:"payment",reply:"わかりました。すぐ振り込みます。"},
-{text:"冷蔵庫を捨てたほうがいいですよ。",effect:"normal",reply:"考えてみます。"},
-{text:"本当に冷蔵庫のせいですか？",effect:"waste",reply:"そうです。"}
-]}
+quote:"分かりました。今から振り込みます。",
+options:[
+["ありがとうございます","pay"],
+["退院した証明をください","waste"],
+["明日でもいいですよ","bad"]
+]
+}
 ]
 },
 
+/* ===== ちょっと変 ===== */
+
 {
-name:"斎藤さん",age:"48歳",job:"自営業",rent:"95,000円",
-delay:"3か月",history:"過去にも4回遅延",
-opening:"ずっと頭の中で音が鳴ってるからダメなんですよ！ほら！今も聞こえるでしょ！",
+name:"井上さん",
+age:"39歳",
+job:"会社員",
+rent:"81,000円",
+arrears:"2か月",
+type:"weird",
+willPay:false,
 turns:[
 {
-question:"どうする？",
-choices:[
-{text:"支払いはいつならできますか？",effect:"payment",reply:"音が止まれば払えます。明日には止まると思います。"},
-{text:"どんな音ですか？",effect:"waste",reply:"ピーーーって音です。"},
-{text:"病院に行ったほうがいいですよ。",effect:"normal",reply:"病院じゃないんです！"}
-]},
+quote:"スマホを落としたんで、連絡できなかったんですよ〜。",
+options:[
+["では、いつ支払えますか？","good"],
+["スマホはどこで落としたんですか？","waste"],
+["新しいスマホ買いました？","waste"]
+]
+},
 {
-question:"明日には止まるらしい。",
-choices:[
-{text:"では、明日支払えるということですね？",effect:"payment",reply:"はい。明日なら払えると思います。"},
-{text:"音を録音できますか？",effect:"waste",reply:"今は無理です。"},
-{text:"今日払ってください。",effect:"normal",reply:"音が鳴ってるから無理です。"}
-]},
+quote:"来週くらいには……。",
+options:[
+["来週の何日に支払えますか？","good"],
+["スマホは見つかりました？","bad"],
+["なぜ連絡できなかったんですか？","waste"]
+]
+},
 {
-question:"最後の確認。",
-choices:[
-{text:"では明日を支払予定日としてお願いします。",effect:"payment",reply:"はい。明日払います。"},
-{text:"音が止まらなかったら？",effect:"confused",reply:"……その場合は分かりません。"},
-{text:"お願いします。",effect:"normal",reply:"はい。"}
-]}
+quote:"うーん……分からないですね。",
+options:[
+["具体的な支払日を決めてください","payfalse"],
+["また連絡ください","bad"],
+["スマホの話をする","waste"]
+]
+}
 ]
 },
 
 {
-name:"清水さん",age:"44歳",job:"会社員",rent:"72,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"夢の中で着物を着た人が出てきて、『まだ払うな』って言うんです。",
+name:"山本さん",
+age:"58歳",
+job:"会社員",
+rent:"69,000円",
+arrears:"1か月",
+type:"weird",
+willPay:false,
 turns:[
 {
-question:"何を確認する？",
-choices:[
-{text:"では、現実にはいつ支払えますか？",effect:"payment",reply:"夢じゃないときなら……明後日です。"},
-{text:"着物の色は？",effect:"waste",reply:"黒っぽかったです。"},
-{text:"夢を信じているんですか？",effect:"normal",reply:"信じるというか……。"}
-]},
+quote:"財布を落としたんですよ。たぶん駅です。",
+options:[
+["警察には届けましたか？","good"],
+["どんな財布ですか？","waste"],
+["駅のどこですか？","waste"]
+]
+},
 {
-question:"明後日という日付が出た。",
-choices:[
-{text:"明後日に支払えるということでいいですか？",effect:"payment",reply:"はい。現実の話なら払えます。"},
-{text:"その夢は何回見ました？",effect:"waste",reply:"何回もです。"},
-{text:"夢より現実を優先してください。",effect:"normal",reply:"分かってます。"}
-]},
+quote:"いや、まだ届けてないです。",
+options:[
+["では家賃を払うお金はありますか？","good"],
+["なぜ届けないんですか？","waste"],
+["駅に探しに行きました？","bad"]
+]
+},
 {
-question:"最後。",
-choices:[
-{text:"では明後日の支払いでお願いします。",effect:"payment",reply:"はい。"},
-{text:"また夢に出てきたらどうします？",effect:"confused",reply:"そのときは……考えます。"},
-{text:"ちゃんと払ってくださいね。",effect:"normal",reply:"分かりました。"}
-]}
+quote:"お金は……たぶんありません。",
+options:[
+["では、いつまでに支払えるか決められますか？","payfalse"],
+["財布が見つかったら連絡ください","bad"],
+["警察に行きましょう","waste"]
 ]
+}
+]
 },
 
 {
-name:"藤田さん",age:"50歳",job:"自営業",rent:"92,000円",
-delay:"3か月",history:"過去にも5回遅延",
-opening:"上の階からドロドロしたパワーが流れてきて、財布を重くしてるんですよ。",
+name:"岡田さん",
+age:"45歳",
+job:"会社員",
+rent:"77,000円",
+arrears:"2か月",
+type:"weird",
+willPay:true,
 turns:[
 {
-question:"どう聞く？",
-choices:[
-{text:"では、そのパワーがなくなれば支払えますか？",effect:"payment",reply:"はい。明日の朝には弱まると思います。"},
-{text:"何色のパワーですか？",effect:"waste",reply:"ドロドロした色です。"},
-{text:"上の階の人に言いましたか？",effect:"normal",reply:"まだです。"}
-]},
+quote:"銀行のATMが私を嫌ってるみたいで……。",
+options:[
+["では、別の方法でいつ支払えますか？","good"],
+["なぜ嫌われてると思うんですか？","waste"],
+["ATMに謝ってみました？","waste"]
+]
+},
 {
-question:"明日の朝には弱まるらしい。",
-choices:[
-{text:"明日、支払えるということですね？",effect:"payment",reply:"はい。明日払います。"},
-{text:"どうやってパワーを測ったんですか？",effect:"waste",reply:"感覚です。"},
-{text:"今日払えない理由は他にありますか？",effect:"normal",reply:"ないです。"}
-]},
+quote:"ネットバンキングならできます。",
+options:[
+["いつ振り込めますか？","good"],
+["ATMにはもう行かないんですか？","waste"],
+["銀行を変えますか？","bad"]
+]
+},
 {
-question:"最後。",
-choices:[
-{text:"では明日中に支払いをお願いします。",effect:"payment",reply:"はい。"},
-{text:"パワーが弱まらなかったら？",effect:"confused",reply:"その場合は……また考えます。"},
-{text:"上の階に文句を言いましょうか？",effect:"waste",reply:"それはやめてください。"}
-]}
+quote:"今日できます。",
+options:[
+["では本日のお支払いでお願いします","pay"],
+["ATMに謝っておいてください","bad"],
+["本当にできますか？","waste"]
+]
+}
 ]
 },
 
 {
-name:"福田さん",age:"36歳",job:"会社員",rent:"85,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"電磁波が強すぎて外に出られません。隣の女の人が出かければ弱まるんです。払うお金はあります。",
+name:"前田さん",
+age:"38歳",
+job:"会社員",
+rent:"80,000円",
+arrears:"1か月",
+type:"weird",
+willPay:true,
 turns:[
 {
-question:"まず何を確認する？",
-choices:[
-{text:"お金はあるなら、いつ支払えますか？",effect:"payment",reply:"隣の人が出かければ払えます。今日か明日です。"},
-{text:"電磁波はどこから来ていますか？",effect:"waste",reply:"隣からです。"},
-{text:"家から出ないでください。",effect:"normal",reply:"それでは払えません。"}
-]},
+quote:"昨日、家賃のことを考えたら急にお腹が痛くなって……。",
+options:[
+["では、いつなら支払えますか？","good"],
+["病院には行きましたか？","waste"],
+["何を食べました？","waste"]
+]
+},
 {
-question:"今日か明日と言われた。",
-choices:[
-{text:"では、明日までには振り込めますか？",effect:"payment",reply:"はい。明日には。"},
-{text:"隣の人の名前は？",effect:"waste",reply:"知りません。"},
-{text:"ネットバンキングは？",effect:"normal",reply:"使えますけど……。"}
-]},
+quote:"給料日は20日です。",
+options:[
+["20日に支払えますか？","good"],
+["お腹はまだ痛いですか？","bad"],
+["給料はいくらですか？","waste"]
+]
+},
 {
-question:"最後。",
-choices:[
-{text:"では明日中の振込をお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"電磁波が止まらなかったら？",effect:"confused",reply:"そのときは無理かもしれません。"},
-{text:"今すぐネットで払えませんか？",effect:"normal",reply:"……今は怖いので。"}
-]}
+quote:"はい、20日に払います。",
+options:[
+["承知しました。20日のお支払いでお願いします","pay"],
+["本当にお腹大丈夫ですか？","waste"],
+["19日でもいいですよ","bad"]
 ]
+}
+]
 },
 
 {
-name:"青木さん",age:"49歳",job:"自営業",rent:"90,000円",
-delay:"3か月",history:"過去にも5回遅延",
-opening:"あったはずのお金がなくなっている！泥棒が入ったのかもしれない。警察に通報します。",
+name:"福田さん",
+age:"30歳",
+job:"会社員",
+rent:"71,000円",
+arrears:"1か月",
+type:"weird",
+willPay:true,
 turns:[
 {
-question:"どう対応する？",
-choices:[
-{text:"警察への通報後、支払いはいつできますか？",effect:"payment",reply:"警察に相談してから考えます。"},
-{text:"何円なくなったんですか？",effect:"waste",reply:"かなりです。"},
-{text:"通報したら連絡してください。",effect:"normal",reply:"分かりました。"}
-]},
+quote:"昨日、引っ越し業者さんに財布を持っていかれた気がするんです。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["業者名を教えてください","waste"],
+["警察には？","waste"]
+]
+},
 {
-question:"まだ支払日が出ない。",
-choices:[
-{text:"警察とは別に、家賃はいつ支払える予定ですか？",effect:"payment",reply:"……来週くらいには。"},
-{text:"本当に泥棒だったんですか？",effect:"waste",reply:"分かりません。"},
-{text:"まず警察に行ってください。",effect:"normal",reply:"そうします。"}
-]},
+quote:"給料日に払えます。",
+options:[
+["給料日は何日ですか？","good"],
+["財布は戻ってきそうですか？","bad"],
+["引っ越し業者と話しましたか？","waste"]
+]
+},
 {
-question:"最後。",
-choices:[
-{text:"では、来週の何日に支払えますか？",effect:"payment",reply:"……水曜日までには。"},
-{text:"警察に行った証明をください。",effect:"confused",reply:"それはちょっと……。"},
-{text:"では水曜日でお願いします。",effect:"payment",reply:"はい。"}
-]}
+quote:"25日です。",
+options:[
+["25日に支払えますか？","pay"],
+["業者には連絡しましたか？","waste"],
+["財布の色は？","waste"]
+]
+}
 ]
 },
 
-/* =========================
-追加の普通・怪しい人
-========================= */
+/* ===== 完全に変 ===== */
 
 {
-name:"森さん",age:"35歳",job:"会社員",rent:"78,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"昨日から体調を崩してしまって、連絡できませんでした。今日からは大丈夫です。",
+name:"佐々木さん",
+age:"42歳",
+job:"会社員",
+rent:"83,000円",
+arrears:"2か月",
+type:"crazy",
+willPay:true,
 turns:[
-{question:"支払いはいつできますか？",choices:[
-{text:"今日中に振り込めますか？",effect:"payment",reply:"はい。今日中に振り込みます。"},
-{text:"どんな病気ですか？",effect:"waste",reply:"そこまで話す必要ありますか？"},
-{text:"病院の名前は？",effect:"waste",reply:"ちょっと……。"}]},
-{question:"今日払えると言っている。",choices:[
-{text:"では本日中の入金をお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"診断書はありますか？",effect:"waste",reply:"必要ですか？"},
-{text:"明日でもいいですよ。",effect:"normal",reply:"今日払います。"}]},
-{question:"最後。",choices:[
-{text:"入金確認できるまでお願いします。",effect:"payment",reply:"はい。"},
-{text:"体調には気をつけてください。",effect:"normal",reply:"ありがとうございます。"},
-{text:"また具合が悪くなったら？",effect:"waste",reply:"そのときは連絡します。"}]}
+{
+quote:"今病院にいて、いつ退院できるか分からないんです。兄弟に振り込みをお願いしてみます。",
+options:[
+["では、兄弟にいつ振り込みをお願いできますか？","good"],
+["何の病気ですか？","waste"],
+["どこの病院ですか？","waste"]
 ]
 },
-
 {
-name:"岡田さん",age:"45歳",job:"会社員",rent:"77,000円",
-delay:"2か月",history:"過去にも1回遅延",
-opening:"昨日振り込みました。明日には反映されると思います。",
-turns:[
-{question:"確認するなら？",choices:[
-{text:"振込明細を確認できますか？",effect:"payment",reply:"……今確認します。"},
-{text:"どこの銀行ですか？",effect:"normal",reply:"○○銀行です。"},
-{text:"昨日何時に振り込みました？",effect:"payment",reply:"夕方です。"}]},
-{question:"明細を確認したい。",choices:[
-{text:"振込先口座は弊社指定口座で間違いないですか？",effect:"payment",reply:"……あれ、違う口座かもしれません。"},
-{text:"銀行のせいですよね？",effect:"waste",reply:"たぶん。"},
-{text:"もう少し待ちましょう。",effect:"normal",reply:"はい。"}]},
-{question:"別口座への振込だった。",choices:[
-{text:"では、正しい口座へいつ振り込めますか？",effect:"payment",reply:"今日中に振り込みます。"},
-{text:"なぜ間違えたんですか？",effect:"waste",reply:"確認不足でした。"},
-{text:"もう一度同じ口座に振り込んでください。",effect:"confused",reply:"また間違えそうなので……。"}]}
+quote:"今日連絡してみます。",
+options:[
+["兄弟が振り込めるのはいつですか？","good"],
+["病院の名前を教えてください","waste"],
+["退院できそうですか？","bad"]
 ]
 },
-
 {
-name:"前田さん",age:"38歳",job:"会社員",rent:"80,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"給料は入ったんですけど、銀行口座を変更したばかりで……。",
-turns:[
-{question:"何を確認？",choices:[
-{text:"今日振り込みはできますか？",effect:"payment",reply:"はい、今日できます。"},
-{text:"なぜ口座を変更したんですか？",effect:"waste",reply:"会社の都合です。"},
-{text:"新しい銀行はどこですか？",effect:"normal",reply:"○○銀行です。"}]},
-{question:"今日払える。",choices:[
-{text:"では今日中にお願いします。",effect:"payment",reply:"はい。"},
-{text:"振込手数料は誰が払いますか？",effect:"normal",reply:"私が払います。"},
-{text:"口座変更の書類を見せてください。",effect:"waste",reply:"そこまで必要ですか？"}]},
-{question:"最後。",choices:[
-{text:"では本日を支払日としてお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"忘れないでくださいね。",effect:"normal",reply:"はい。"},
-{text:"何時までに払えますか？",effect:"payment",reply:"夕方までには。"}]}
+quote:"兄が今日振り込んでくれるそうです。",
+options:[
+["では、本日のお支払いでお願いします","pay"],
+["お兄さんは何歳ですか？","waste"],
+["本当に振り込んでくれますか？","waste"]
+]
+}
 ]
 },
 
 {
-name:"藤井さん",age:"47歳",job:"自営業",rent:"89,000円",
-delay:"2か月",history:"過去にも3回遅延",
-opening:"今月ちょっと売上が悪くて……でも来月には絶対払えます。",
+name:"木村さん",
+age:"51歳",
+job:"会社員",
+rent:"86,000円",
+arrears:"2か月",
+type:"crazy",
+willPay:true,
 turns:[
-{question:"まず何を聞く？",choices:[
-{text:"来月の何日に支払えますか？",effect:"payment",reply:"給料の入る25日です。"},
-{text:"売上はいくらですか？",effect:"waste",reply:"かなり落ちてます。"},
-{text:"商売は大丈夫なんですか？",effect:"waste",reply:"なんとか。"}]},
-{question:"25日と言われた。",choices:[
-{text:"25日に必ず振り込めますか？",effect:"payment",reply:"はい。"},
-{text:"もし売上が戻らなかったら？",effect:"normal",reply:"そのときは考えます。"},
-{text:"今日少し払えませんか？",effect:"normal",reply:"難しいです。"}]},
-{question:"最後。",choices:[
-{text:"では25日を支払日としてお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"絶対ですよ。",effect:"normal",reply:"はい。"},
-{text:"売上表を見せてください。",effect:"waste",reply:"それはちょっと。"}]}
+{
+quote:"玄関前に黒い人がいて、出かけるのを邪魔してくるんです。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["黒い人ってどんな人ですか？","waste"],
+["警察には連絡しましたか？","waste"]
 ]
 },
-
 {
-name:"後藤さん",age:"33歳",job:"会社員",rent:"73,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"家賃の引き落とし口座を変更したばかりで、登録できてなかったみたいです。",
-turns:[
-{question:"何を聞く？",choices:[
-{text:"新しい口座から今日振り込めますか？",effect:"payment",reply:"はい。今日振り込みます。"},
-{text:"どこの銀行からどこに変えましたか？",effect:"normal",reply:"○○銀行から△△銀行です。"},
-{text:"なぜ変更したんですか？",effect:"waste",reply:"会社の指定で……。"}]},
-{question:"今日払える。",choices:[
-{text:"では今日中の振込をお願いします。",effect:"payment",reply:"はい。"},
-{text:"登録はいつからでしたか？",effect:"waste",reply:"先月です。"},
-{text:"次から気をつけてください。",effect:"normal",reply:"はい。"}]},
-{question:"最後。",choices:[
-{text:"本日を支払日として処理します。",effect:"payment",reply:"分かりました。"},
-{text:"口座登録の画面を見せてください。",effect:"waste",reply:"そこまで必要ですか？"},
-{text:"忘れないようにしてください。",effect:"normal",reply:"はい。"}]}
+quote:"あの人がいなくなったら出かけられます。雨が降ったらいなくなるはずです。",
+options:[
+["雨が降ったら、いつ支払えますか？","good"],
+["黒い人は毎日いますか？","waste"],
+["天気予報を確認しましょうか？","bad"]
 ]
 },
-
 {
-name:"長谷川さん",age:"42歳",job:"パート",rent:"64,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"今月だけ勤務日数が減って、お給料が少なくなってしまいました。",
-turns:[
-{question:"どう聞く？",choices:[
-{text:"次の給料日はいつですか？",effect:"payment",reply:"10日です。"},
-{text:"なぜ勤務日数が減ったんですか？",effect:"waste",reply:"シフトが減りました。"},
-{text:"会社に増やしてもらえませんか？",effect:"normal",reply:"来月は戻る予定です。"}]},
-{question:"10日と分かった。",choices:[
-{text:"10日に家賃を支払えますか？",effect:"payment",reply:"はい。"},
-{text:"給料はいくらですか？",effect:"waste",reply:"ちょっと……。"},
-{text:"家族から借りられませんか？",effect:"normal",reply:"できれば避けたいです。"}]},
-{question:"最後。",choices:[
-{text:"では10日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"必ずですよ。",effect:"normal",reply:"分かりました。"},
-{text:"勤務表を確認してもいいですか？",effect:"waste",reply:"そこまでは……。"}]}
+quote:"明後日、雨の予報なので、その日に振り込みます。",
+options:[
+["では、明後日のお支払いでお願いします","pay"],
+["黒い人がいなくなったら教えてください","bad"],
+["本当に雨が降るか確認します","waste"]
+]
+}
 ]
 },
 
-/* =========================
-馬券
-========================= */
-
 {
-name:"加藤さん",age:"44歳",job:"会社員",rent:"72,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"この馬券が当たったら払えるんですよ。明日レースなんで。",
+name:"渡辺さん",
+age:"47歳",
+job:"自営業",
+rent:"89,000円",
+arrears:"3か月",
+type:"crazy",
+willPay:true,
 turns:[
-{question:"何を確認する？",choices:[
-{text:"馬券が外れた場合は、いつ支払えますか？",effect:"payment",reply:"……外れたらちょっと厳しいですね。"},
-{text:"誰が走るんですか？",effect:"waste",reply:"ルメールです。"},
-{text:"いくら賭けたんですか？",effect:"waste",reply:"それは言えません。"}]},
-{question:"馬券次第と言われた。",choices:[
-{text:"馬券が外れても支払える方法を確認しましょう。",effect:"payment",reply:"……給料日なら払えます。20日です。"},
-{text:"ルメールなら大丈夫ですね。",effect:"confused",reply:"ですよね！"},
-{text:"競馬に詳しいんですか？",effect:"waste",reply:"まあ、それなりに。"}]},
-{question:"20日という支払日が出た。",choices:[
-{text:"では、20日に必ず支払うということでお願いします。",effect:"payment",reply:"はい。馬券が外れても20日には払います。"},
-{text:"その馬券、買ったんですか？",effect:"waste",reply:"買いました。"},
-{text:"当たるといいですね。",effect:"normal",reply:"ありがとうございます（笑）"}]}
+{
+quote:"冷蔵庫から電波が出ていて、体が固められていたんですよ。",
+options:[
+["では、いつ支払えますか？","good"],
+["冷蔵庫は何年使っていますか？","waste"],
+["電波を止める方法はありますか？","waste"]
 ]
 },
-
-/* =========================
-保護費
-========================= */
-
 {
-name:"松本さん",age:"31歳",job:"会社員",rent:"75,000円",
-delay:"2か月",history:"過去にも1回遅延",
-opening:"明日が保護費の支給日なんです。",
-turns:[
-{question:"ではどう聞く？",choices:[
-{text:"では明日、家賃を支払えますか？",effect:"payment",reply:"いえ、明日は別の支払いがあります。"},
-{text:"保護費はいくらですか？",effect:"waste",reply:"それはちょっと……。"},
-{text:"明日まで待ちます。",effect:"normal",reply:"ありがとうございます。"}]},
-{question:"明日は別の支払いがあるらしい。",choices:[
-{text:"では、その支払いが終わったら家賃はいくら残りますか？",effect:"payment",reply:"うまく計算ができなくて……。"},
-{text:"何の支払いですか？",effect:"waste",reply:"いろいろです。"},
-{text:"じゃあ来週でいいですね。",effect:"normal",reply:"たぶん……。"}]},
-{question:"まだ曖昧。",choices:[
-{text:"では、家賃を支払える具体的な日はいつですか？",effect:"payment",reply:"……20日なら払えると思います。"},
-{text:"計算してから電話してください。",effect:"normal",reply:"分かりました。"},
-{text:"じゃあ払えるまで待ちます。",effect:"confused",reply:"はい……。"}]}
+quote:"今から支払いに行きます。",
+options:[
+["では、本日支払えますか？","good"],
+["冷蔵庫のメーカーは？","waste"],
+["体はもう動きますか？","bad"]
 ]
 },
-
-/* =========================
-電磁波＋財布
-========================= */
-
 {
-name:"石井さん",age:"36歳",job:"会社員",rent:"85,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"電磁波が強すぎて外に出られません。払うお金はあります。私の財布にあります。",
-turns:[
-{question:"まず何を聞く？",choices:[
-{text:"お金があるなら、いつ支払えますか？",effect:"payment",reply:"今確認します。"},
-{text:"電磁波はどこから？",effect:"waste",reply:"隣です。"},
-{text:"財布を見せてください。",effect:"normal",reply:"今確認します。"}]},
-{question:"財布を確認したら……。",choices:[
-{text:"中身はありましたか？",effect:"payment",reply:"財布の中身がありません。誰かが電磁波に乗って取っていきました。"},
-{text:"警察に連絡しますか？",effect:"normal",reply:"しようと思います。"},
-{text:"電磁波に乗るってどういうことですか？",effect:"waste",reply:"そのままです。"}]},
-{question:"支払いの見込みを聞く。",choices:[
-{text:"では、いつなら家賃を支払えますか？",effect:"payment",reply:"……給料日の25日なら。"},
-{text:"犯人を探しましょうか？",effect:"confused",reply:"お願いします。"},
-{text:"財布が見つかったら払えますか？",effect:"normal",reply:"はい。"}]}
+quote:"はい。今から振り込みます。",
+options:[
+["ありがとうございます。本日のお支払いでお願いします","pay"],
+["電波には気をつけてください","bad"],
+["本当に大丈夫ですか？","waste"]
 ]
+}
+]
 },
-
-/* =========================
-残りの普通人
-========================= */
 
 {
-name:"阿部さん",age:"40歳",job:"会社員",rent:"86,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"子どもの学校で急にまとまった集金があってしまって……。",
+name:"青木さん",
+age:"49歳",
+job:"自営業",
+rent:"90,000円",
+arrears:"3か月",
+type:"crazy",
+willPay:false,
 turns:[
-{question:"何を聞く？",choices:[
-{text:"次の給料日はいつですか？",effect:"payment",reply:"25日です。"},
-{text:"学校に確認しましょうか？",effect:"waste",reply:"大丈夫です。"},
-{text:"いくら払ったんですか？",effect:"waste",reply:"結構かかりました。"}]},
-{question:"25日と分かった。",choices:[
-{text:"25日に家賃を支払えますか？",effect:"payment",reply:"はい。"},
-{text:"学校は大変ですね。",effect:"normal",reply:"そうなんです。"},
-{text:"今日一部払えませんか？",effect:"normal",reply:"厳しいです。"}]},
-{question:"最後。",choices:[
-{text:"では25日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"忘れないでください。",effect:"normal",reply:"はい。"},
-{text:"学校には気をつけてくださいね。",effect:"waste",reply:"はい……。"}]}
+{
+quote:"あったはずのお金がなくなっている！泥棒が入ったのかもしれない。警察に通報します。",
+options:[
+["警察にはもう通報しましたか？","good"],
+["いくらなくなったんですか？","waste"],
+["家のどこに置いていたんですか？","waste"]
 ]
 },
-
 {
-name:"山口さん",age:"43歳",job:"会社員",rent:"83,000円",
-delay:"2か月",history:"過去にも3回遅延",
-opening:"家族が入院してしまって、急にお金が必要になったんです。",
-turns:[
-{question:"何を聞く？",choices:[
-{text:"家賃はいつなら支払えますか？",effect:"payment",reply:"給料日の20日です。"},
-{text:"どこの病院ですか？",effect:"waste",reply:"それは言いたくありません。"},
-{text:"家族は誰ですか？",effect:"waste",reply:"それも……。"}]},
-{question:"20日と分かった。",choices:[
-{text:"20日に必ず支払えますか？",effect:"payment",reply:"はい。"},
-{text:"入院はいつまでですか？",effect:"waste",reply:"分かりません。"},
-{text:"今月は仕方ないですね。",effect:"normal",reply:"ありがとうございます。"}]},
-{question:"最後。",choices:[
-{text:"では20日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"病院の領収書はありますか？",effect:"waste",reply:"ありません。"},
-{text:"ご家族も大変ですね。",effect:"normal",reply:"ありがとうございます。"}]}
+quote:"これから通報します。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["警察には何を伝えますか？","waste"],
+["大変ですね","bad"]
+]
+},
+{
+quote:"警察に相談してから考えます。",
+options:[
+["具体的な支払日を決められますか？","payfalse"],
+["では警察に相談してください","bad"],
+["なくなったお金について詳しく聞く","waste"]
 ]
+}
+]
 },
 
 {
-name:"石川さん",age:"36歳",job:"会社員",rent:"85,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"カードの限度額いっぱいになってしまって、家賃を払えなかったんです。",
+name:"斉藤さん",
+age:"55歳",
+job:"会社員",
+rent:"68,000円",
+arrears:"2か月",
+type:"crazy",
+willPay:false,
 turns:[
-{question:"どう聞く？",choices:[
-{text:"では、いつなら家賃を支払えますか？",effect:"payment",reply:"給料日なら払えます。"},
-{text:"何にカードを使ったんですか？",effect:"waste",reply:"いろいろです。"},
-{text:"カード会社に相談しましたか？",effect:"normal",reply:"してません。"}]},
-{question:"給料日が分かりそう。",choices:[
-{text:"給料日は何日ですか？",effect:"payment",reply:"25日です。"},
-{text:"カードを見せてもらえますか？",effect:"waste",reply:"それはちょっと。"},
-{text:"限度額はいくらですか？",effect:"waste",reply:"関係あります？"}]},
-{question:"最後。",choices:[
-{text:"では25日に支払うということでお願いします。",effect:"payment",reply:"はい。"},
-{text:"カードは使いすぎないようにしてください。",effect:"normal",reply:"気をつけます。"},
-{text:"本当に25日に払えますか？",effect:"payment",reply:"はい。"}]}
+{
+quote:"ずっと頭の中で音が鳴ってるからダメなんですよ！ほら！今も聞こえるでしょ！",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["どんな音ですか？","waste"],
+["私にも聞こえるか確認します","waste"]
+]
+},
+{
+quote:"音が止まらないと銀行に行けません。",
+options:[
+["銀行に行けなくても支払える方法はありますか？","good"],
+["いつから音が鳴っていますか？","waste"],
+["病院に行きましたか？","bad"]
+]
+},
+{
+quote:"……分からないです。",
+options:[
+["では、いつまでに支払えるか決めてください","payfalse"],
+["音が止まったら連絡ください","bad"],
+["音について詳しく聞く","waste"]
 ]
+}
+]
 },
 
 {
-name:"中島さん",age:"60歳",job:"年金生活",rent:"59,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"年金の振込日を勘違いしていて、今日だと思ってたんです。明日入ります。",
+name:"山口さん",
+age:"43歳",
+job:"会社員",
+rent:"83,000円",
+arrears:"2か月",
+type:"crazy",
+willPay:true,
 turns:[
-{question:"確認する？",choices:[
-{text:"では明日、支払えますか？",effect:"payment",reply:"はい。明日払います。"},
-{text:"なぜ勘違いしたんですか？",effect:"waste",reply:"カレンダーを見間違えました。"},
-{text:"年金はいくらですか？",effect:"waste",reply:"それは……。"}]},
-{question:"明日払える。",choices:[
-{text:"では明日中に振り込めますか？",effect:"payment",reply:"はい。"},
-{text:"午前中にできますか？",effect:"normal",reply:"できると思います。"},
-{text:"絶対ですよ。",effect:"normal",reply:"はい。"}]},
-{question:"最後。",choices:[
-{text:"では明日を支払日としてお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"カレンダーを確認してくださいね。",effect:"normal",reply:"はい。"},
-{text:"次から気をつけてください。",effect:"normal",reply:"すみません。"}]}
+{
+quote:"昨日から上の階からドロドロしたパワーが流れてきて、体が重いんです。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["パワーって何ですか？","waste"],
+["上の階の人に確認しましょうか？","bad"]
+]
+},
+{
+quote:"明日の朝には弱まると思います。",
+options:[
+["明日なら支払えますか？","good"],
+["なぜ明日弱まるんですか？","waste"],
+["上の階の人は誰ですか？","waste"]
+]
+},
+{
+quote:"はい。明日の午後なら振り込めます。",
+options:[
+["では、明日の午後のお支払いでお願いします","pay"],
+["パワーには気をつけてください","bad"],
+["何時に弱まるんですか？","waste"]
 ]
+}
+]
 },
 
 {
-name:"村上さん",age:"56歳",job:"会社員",rent:"67,000円",
-delay:"2か月",history:"過去にも4回遅延",
-opening:"郵便物が届いてなくて、滞納してること自体知らなかったんです。",
+name:"森田さん",
+age:"36歳",
+job:"会社員",
+rent:"75,000円",
+arrears:"1か月",
+type:"crazy",
+willPay:false,
 turns:[
-{question:"どうする？",choices:[
-{text:"では、現在は滞納を把握していますね。いつ払えますか？",effect:"payment",reply:"給料日なら払えます。"},
-{text:"郵便受けを確認しましたか？",effect:"normal",reply:"はい。"},
-{text:"郵便局に問い合わせましたか？",effect:"waste",reply:"まだです。"}]},
-{question:"給料日を聞く。",choices:[
-{text:"給料日は何日ですか？",effect:"payment",reply:"10日です。"},
-{text:"郵便はどこに行ったんでしょうね？",effect:"waste",reply:"分かりません。"},
-{text:"今すぐ払えませんか？",effect:"normal",reply:"無理です。"}]},
-{question:"最後。",choices:[
-{text:"では10日に支払うことでお願いします。",effect:"payment",reply:"はい。"},
-{text:"郵便局にも確認してください。",effect:"normal",reply:"分かりました。"},
-{text:"次はちゃんと郵便を見てくださいね。",effect:"normal",reply:"はい。"}]}
+{
+quote:"夢の中で着物を着た人が『まだ払うな』って言ってくるんですよ。",
+options:[
+["では、現実ではいつ支払えますか？","good"],
+["その人は何歳くらいですか？","waste"],
+["夢の内容を詳しく教えてください","waste"]
+]
+},
+{
+quote:"夢の人が許してくれないと払えないんです。",
+options:[
+["現実の支払日を決めてもらえますか？","good"],
+["また夢を見ると思いますか？","waste"],
+["その人に私から話しましょうか？","bad"]
+]
+},
+{
+quote:"……夢の人次第です。",
+options:[
+["それでは具体的な支払日は決められませんか？","payfalse"],
+["夢の人と相談してください","bad"],
+["着物の色を聞く","waste"]
 ]
+}
+]
 },
 
 {
-name:"西村さん",age:"53歳",job:"会社員",rent:"84,000円",
-delay:"2か月",history:"過去にも3回遅延",
-opening:"もう退職することになってまして、今月いっぱいで引っ越すつもりなんです。",
+name:"藤井さん",
+age:"47歳",
+job:"自営業",
+rent:"89,000円",
+arrears:"2か月",
+type:"crazy",
+willPay:false,
 turns:[
-{question:"どう確認する？",choices:[
-{text:"退職・引っ越しに関係なく、現在の家賃はいつ払えますか？",effect:"payment",reply:"……給料日の20日です。"},
-{text:"どこへ引っ越すんですか？",effect:"waste",reply:"まだ決めてません。"},
-{text:"退職理由は何ですか？",effect:"waste",reply:"いろいろです。"}]},
-{question:"20日と分かった。",choices:[
-{text:"では20日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"本当に引っ越すんですか？",effect:"normal",reply:"その予定です。"},
-{text:"退職届を見せてください。",effect:"waste",reply:"そこまでは……。"}]},
-{question:"最後。",choices:[
-{text:"では20日を支払日としてお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"引っ越すなら早くしてください。",effect:"normal",reply:"はい。"},
-{text:"退職後の生活はどうするんですか？",effect:"waste",reply:"まだ決めてません。"}]}
+{
+quote:"電磁波が強すぎて外に出られません。隣の女の人が出かければ弱まるんです。",
+options:[
+["外に出なくても、いつ支払えますか？","good"],
+["隣の女性はいつ出かけますか？","waste"],
+["電磁波を測りましたか？","waste"]
+]
+},
+{
+quote:"財布にお金はあります。今確認します。",
+options:[
+["確認したら、いつ振り込めますか？","good"],
+["財布の中身はいくらですか？","waste"],
+["電磁波対策をしましょう","bad"]
+]
+},
+{
+quote:"財布のお金がなくなってます。誰かが電磁波に乗って取っていきました。",
+options:[
+["では、支払日を決めることはできますか？","payfalse"],
+["誰が取ったんですか？","waste"],
+["警察に通報してください","bad"]
 ]
+}
+]
 },
 
-/* =========================
-さらに普通の人たち
-========================= */
+/* ===== 競馬 ===== */
 
 {
-name:"近藤さん",age:"27歳",job:"会社員",rent:"70,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"給料の振込口座を間違えて登録してしまいました。",
+name:"中島さん",
+age:"40歳",
+job:"会社員",
+rent:"78,000円",
+arrears:"2か月",
+type:"weird",
+willPay:false,
 turns:[
-{question:"いつ払える？",choices:[
-{text:"正しい口座に給与が入るのはいつですか？",effect:"payment",reply:"18日です。"},
-{text:"どうして間違えたんですか？",effect:"waste",reply:"入力ミスです。"},
-{text:"会社に確認しましたか？",effect:"normal",reply:"はい。"}]},
-{question:"18日と分かった。",choices:[
-{text:"18日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"給料はいくらですか？",effect:"waste",reply:"それは……。"},
-{text:"今日払う方法は？",effect:"normal",reply:"今は難しいです。"}]},
-{question:"最後。",choices:[
-{text:"では18日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"忘れないようにしてください。",effect:"normal",reply:"はい。"},
-{text:"会社にも確認しますか？",effect:"waste",reply:"大丈夫です。"}]}
+{
+quote:"この馬券が当たったら払えるんです。",
+options:[
+["馬券が外れた場合は、いつ払えますか？","good"],
+["どの馬を買ったんですか？","waste"],
+["いくら賭けたんですか？","waste"]
 ]
 },
-
 {
-name:"原田さん",age:"51歳",job:"会社員",rent:"68,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"口座に入っていると思っていたお金が足りませんでした。",
-turns:[
-{question:"何を聞く？",choices:[
-{text:"次に入金されるのはいつですか？",effect:"payment",reply:"12日です。"},
-{text:"何に使ったんですか？",effect:"waste",reply:"生活費です。"},
-{text:"残高を確認しましたか？",effect:"normal",reply:"はい。"}]},
-{question:"12日と分かった。",choices:[
-{text:"12日に家賃を支払えますか？",effect:"payment",reply:"はい。"},
-{text:"残高はいくらでした？",effect:"waste",reply:"少なかったです。"},
-{text:"今日一部払いますか？",effect:"normal",reply:"難しいです。"}]},
-{question:"最後。",choices:[
-{text:"では12日を支払日としてお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"次は残高を確認してくださいね。",effect:"normal",reply:"はい。"},
-{text:"銀行を変えたらどうですか？",effect:"waste",reply:"考えます。"}]}
+quote:"当たれば今日払えます。",
+options:[
+["外れた場合の支払日は決められますか？","good"],
+["買った馬は誰ですか？","waste"],
+["当たるといいですね","bad"]
 ]
 },
-
 {
-name:"森田さん",age:"29歳",job:"会社員",rent:"71,000円",
-delay:"2か月",history:"過去にも1回遅延",
-opening:"給料日がいつもより遅くなったんです。",
-turns:[
-{question:"どうする？",choices:[
-{text:"今回の給与支給日は何日ですか？",effect:"payment",reply:"21日です。"},
-{text:"なぜ遅れたんですか？",effect:"waste",reply:"会社の処理です。"},
-{text:"会社に電話しましょうか？",effect:"normal",reply:"大丈夫です。"}]},
-{question:"21日と分かった。",choices:[
-{text:"21日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"本当に給料は入りますか？",effect:"normal",reply:"はい。"},
-{text:"給与明細を送ってください。",effect:"waste",reply:"必要ですか？"}]},
-{question:"最後。",choices:[
-{text:"では21日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"お願いしますね。",effect:"normal",reply:"分かりました。"},
-{text:"会社に確認します。",effect:"confused",reply:"えっ、そこまで？"}]}
+quote:"ちなみに買った馬券はルメールです。",
+options:[
+["では、外れた場合でも支払える日を決めてください","payfalse"],
+["ルメールなら仕方ないですね","bad"],
+["何レースですか？","waste"]
 ]
+}
+]
 },
+
+/* ===== 保護費 ===== */
 
 {
-name:"池田さん",age:"45歳",job:"自営業",rent:"93,000円",
-delay:"3か月",history:"過去にも4回遅延",
-opening:"大きな仕事が入る予定なんですが、まだ契約が決まってなくて……。",
+name:"小川さん",
+age:"50歳",
+job:"無職",
+rent:"61,000円",
+arrears:"1か月",
+type:"normal",
+willPay:false,
 turns:[
-{question:"何を聞く？",choices:[
-{text:"現在の家賃はいつ支払えそうですか？",effect:"payment",reply:"今月末には何とか。"},
-{text:"仕事の内容は？",effect:"waste",reply:"まだ秘密です。"},
-{text:"いくらの仕事ですか？",effect:"waste",reply:"かなり大きいです。"}]},
-{question:"月末と言われた。",choices:[
-{text:"月末の何日ですか？",effect:"payment",reply:"30日です。"},
-{text:"契約は本当に決まりますか？",effect:"normal",reply:"たぶん……。"},
-{text:"その仕事がなくなったら？",effect:"normal",reply:"考えます。"}]},
-{question:"最後。",choices:[
-{text:"では30日を支払予定日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"契約書を見せてください。",effect:"waste",reply:"まだありません。"},
-{text:"大きな仕事、頑張ってください。",effect:"normal",reply:"ありがとうございます。"}]}
+{
+quote:"明日が保護費の支給日なんです。",
+options:[
+["では、明日支払えますか？","good"],
+["保護費はいくらですか？","waste"],
+["それなら大丈夫ですね","bad"]
 ]
 },
-
 {
-name:"小川さん",age:"40歳",job:"会社員",rent:"79,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"引き落とし日に残高が足りなかったみたいです。",
-turns:[
-{question:"確認する？",choices:[
-{text:"いつ入金できますか？",effect:"payment",reply:"明日です。"},
-{text:"なぜ残高が足りなかったんですか？",effect:"waste",reply:"忘れてました。"},
-{text:"銀行に確認しましたか？",effect:"normal",reply:"はい。"}]},
-{question:"明日入金される。",choices:[
-{text:"では明日、家賃を振り込めますか？",effect:"payment",reply:"はい。"},
-{text:"いくら入りますか？",effect:"waste",reply:"給料です。"},
-{text:"今から払えませんか？",effect:"normal",reply:"残高がありません。"}]},
-{question:"最後。",choices:[
-{text:"では明日の支払いでお願いします。",effect:"payment",reply:"はい。"},
-{text:"残高は確認してくださいね。",effect:"normal",reply:"気をつけます。"},
-{text:"銀行口座を変えたらどうですか？",effect:"waste",reply:"考えます。"}]}
+quote:"いえ、明日は別の支払いがあって……。",
+options:[
+["では、その支払いが終わった後、いつ払えますか？","good"],
+["何の支払いですか？","waste"],
+["保護費を全部使うんですか？","waste"]
 ]
 },
-
 {
-name:"村田さん",age:"57歳",job:"会社員",rent:"66,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"家族のことで出費が続いてしまって……。",
-turns:[
-{question:"どう聞く？",choices:[
-{text:"家賃はいつなら支払えますか？",effect:"payment",reply:"15日なら。"},
-{text:"何があったんですか？",effect:"waste",reply:"家族のことです。"},
-{text:"いくら必要だったんですか？",effect:"waste",reply:"かなりです。"}]},
-{question:"15日と分かった。",choices:[
-{text:"15日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"家族に借りることは？",effect:"normal",reply:"できません。"},
-{text:"15日まで待ちます。",effect:"normal",reply:"ありがとうございます。"}]},
-{question:"最後。",choices:[
-{text:"では15日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"家族のことも大変ですね。",effect:"normal",reply:"ありがとうございます。"},
-{text:"詳しく事情を教えてください。",effect:"waste",reply:"ちょっと……。"}]}
+quote:"残れば払えると思うんですが、うまく計算ができなくて……。",
+options:[
+["では、確実に支払える日はいつですか？","payfalse"],
+["計算してから連絡してください","bad"],
+["一緒に計算しましょうか？","waste"]
+]
+}
 ]
 },
 
+/* ===== さらに普通 ===== */
+
 {
-name:"吉川さん",age:"34歳",job:"会社員",rent:"76,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"カードの引き落としと家賃が重なってしまいました。",
+name:"清水さん",
+age:"27歳",
+job:"会社員",
+rent:"70,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
-{question:"何を聞く？",choices:[
-{text:"次にお金が入るのはいつですか？",effect:"payment",reply:"10日です。"},
-{text:"カードで何を買ったんですか？",effect:"waste",reply:"生活用品です。"},
-{text:"カードを解約しますか？",effect:"waste",reply:"そこまでは……。"}]},
-{question:"10日と分かった。",choices:[
-{text:"10日に家賃を払えますか？",effect:"payment",reply:"はい。"},
-{text:"カード会社に相談しましたか？",effect:"normal",reply:"してません。"},
-{text:"カードより家賃を優先してください。",effect:"normal",reply:"分かっています。"}]},
-{question:"最後。",choices:[
-{text:"では10日にお願いします。",effect:"payment",reply:"はい。"},
-{text:"カードには気をつけてください。",effect:"normal",reply:"はい。"},
-{text:"カードの明細を確認しましょうか？",effect:"waste",reply:"大丈夫です。"}]}
+{
+quote:"会社の給料日が今月から変わったんです。",
+options:[
+["新しい給料日は何日ですか？","good"],
+["なぜ変更されたんですか？","waste"],
+["会社に確認します","bad"]
 ]
 },
-
 {
-name:"浜田さん",age:"48歳",job:"会社員",rent:"82,000円",
-delay:"2か月",history:"過去にも1回遅延",
-opening:"妻の給料が入れば一緒に払えるんです。",
-turns:[
-{question:"何を聞く？",choices:[
-{text:"奥様の給料日はいつですか？",effect:"payment",reply:"18日です。"},
-{text:"奥様はいくら稼いでいますか？",effect:"waste",reply:"分かりません。"},
-{text:"妻に電話してください。",effect:"normal",reply:"帰ったら話します。"}]},
-{question:"18日と分かった。",choices:[
-{text:"18日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"もし奥様の給料が少なかったら？",effect:"normal",reply:"そのときは考えます。"},
-{text:"今日奥様から借りられませんか？",effect:"normal",reply:"難しいです。"}]},
-{question:"最後。",choices:[
-{text:"では18日を支払日としてお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"奥様にも伝えてください。",effect:"normal",reply:"はい。"},
-{text:"奥様の勤務先を教えてください。",effect:"waste",reply:"それはちょっと。"}]}
+quote:"28日です。",
+options:[
+["28日に支払えますか？","good"],
+["給料はいくらですか？","waste"],
+["28日まで待ちます","bad"]
 ]
 },
-
 {
-name:"安藤さん",age:"39歳",job:"会社員",rent:"74,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"家賃を払う口座に間違えて生活費を入れてしまっていました。",
-turns:[
-{question:"どうする？",choices:[
-{text:"いつ正しい口座へ資金を移せますか？",effect:"payment",reply:"今日中です。"},
-{text:"生活費はいくらですか？",effect:"waste",reply:"それは……。"},
-{text:"なぜ間違えたんですか？",effect:"normal",reply:"操作ミスです。"}]},
-{question:"今日移せる。",choices:[
-{text:"では今日中に振り込めますか？",effect:"payment",reply:"はい。"},
-{text:"口座番号を確認しましょうか？",effect:"normal",reply:"大丈夫です。"},
-{text:"銀行に問い合わせますか？",effect:"waste",reply:"必要ないです。"}]},
-{question:"最後。",choices:[
-{text:"では本日中の支払いでお願いします。",effect:"payment",reply:"はい。"},
-{text:"次から気をつけてください。",effect:"normal",reply:"はい。"},
-{text:"本当に今日払えますか？",effect:"payment",reply:"はい。"}]}
+quote:"はい、28日に払います。",
+options:[
+["28日のお支払いでお願いします","pay"],
+["本当に大丈夫ですか？","waste"],
+["29日でもいいですよ","bad"]
 ]
+}
+]
 },
 
 {
-name:"竹内さん",age:"43歳",job:"自営業",rent:"87,000円",
-delay:"2か月",history:"過去にも3回遅延",
-opening:"売掛金がまだ入ってこなくて、困ってるんですよ。",
+name:"阿部さん",
+age:"40歳",
+job:"会社員",
+rent:"86,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
-{question:"どう聞く？",choices:[
-{text:"売掛金の入金予定日はいつですか？",effect:"payment",reply:"22日です。"},
-{text:"相手の会社名は？",effect:"waste",reply:"それはちょっと。"},
-{text:"いくらの売掛金ですか？",effect:"waste",reply:"結構あります。"}]},
-{question:"22日と分かった。",choices:[
-{text:"22日に家賃を支払えますか？",effect:"payment",reply:"はい。"},
-{text:"入金が遅れたらどうします？",effect:"normal",reply:"そのときは相談します。"},
-{text:"相手に電話してください。",effect:"normal",reply:"あとでします。"}]},
-{question:"最後。",choices:[
-{text:"では22日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"本当に入金されますか？",effect:"normal",reply:"その予定です。"},
-{text:"契約書を見せてください。",effect:"waste",reply:"そこまでは……。"}]}
+{
+quote:"子どもの学校で急にまとまった集金がありまして……。",
+options:[
+["いつ支払えますか？","good"],
+["何の集金ですか？","waste"],
+["学校に聞いてみますか？","bad"]
 ]
 },
-
 {
-name:"佐々木さん",age:"37歳",job:"会社員",rent:"77,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"銀行のアプリがうまく動かなくて振り込みできませんでした。",
-turns:[
-{question:"何を聞く？",choices:[
-{text:"いつなら振り込みできますか？",effect:"payment",reply:"今日の夜なら大丈夫です。"},
-{text:"スマホは何を使っていますか？",effect:"waste",reply:"iPhoneです。"},
-{text:"銀行に電話しましたか？",effect:"normal",reply:"まだです。"}]},
-{question:"今夜なら払える。",choices:[
-{text:"では今夜中にお願いします。",effect:"payment",reply:"はい。"},
-{text:"アプリを再インストールしましたか？",effect:"waste",reply:"まだです。"},
-{text:"明日でもいいですよ。",effect:"normal",reply:"今日やります。"}]},
-{question:"最後。",choices:[
-{text:"では本日夜の振込でお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"アプリは気をつけてください。",effect:"normal",reply:"はい。"},
-{text:"本当に振り込めますか？",effect:"payment",reply:"はい。"}]}
+quote:"次の給料日です。",
+options:[
+["給料日は何日ですか？","good"],
+["次の給料なら大丈夫ですね","bad"],
+["いくら給料が入りますか？","waste"]
 ]
 },
-
 {
-name:"野村さん",age:"55歳",job:"会社員",rent:"69,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"給料が減ってしまって、家賃まで回らなくなりました。",
-turns:[
-{question:"何を聞く？",choices:[
-{text:"次の給料日はいつですか？",effect:"payment",reply:"25日です。"},
-{text:"なぜ給料が減ったんですか？",effect:"waste",reply:"残業が減りました。"},
-{text:"会社に文句を言いましたか？",effect:"waste",reply:"言ってません。"}]},
-{question:"25日と分かった。",choices:[
-{text:"25日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"家賃を下げてほしいですか？",effect:"normal",reply:"できれば……。"},
-{text:"今日少し払えますか？",effect:"normal",reply:"厳しいです。"}]},
-{question:"最後。",choices:[
-{text:"では25日を支払日としてお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"収入を増やす方法を考えましょう。",effect:"waste",reply:"そうですね。"},
-{text:"忘れないでください。",effect:"normal",reply:"はい。"}]}
+quote:"10日です。",
+options:[
+["10日に支払えますか？","pay"],
+["学校の集金について詳しく","waste"],
+["11日でも大丈夫ですよ","bad"]
 ]
+}
+]
 },
 
 {
-name:"関口さん",age:"30歳",job:"会社員",rent:"73,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"引っ越しの費用を払ったばかりで、口座残高が足りませんでした。",
+name:"藤田さん",
+age:"50歳",
+job:"自営業",
+rent:"92,000円",
+arrears:"3か月",
+type:"normal",
+willPay:false,
 turns:[
-{question:"どうする？",choices:[
-{text:"次の給料日はいつですか？",effect:"payment",reply:"25日です。"},
-{text:"引っ越し先はどこですか？",effect:"waste",reply:"近所です。"},
-{text:"引っ越し業者はいくらでした？",effect:"waste",reply:"結構しました。"}]},
-{question:"25日と分かった。",choices:[
-{text:"25日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"引っ越しは大変でしたね。",effect:"normal",reply:"ありがとうございます。"},
-{text:"今日少し払えますか？",effect:"normal",reply:"今は難しいです。"}]},
-{question:"最後。",choices:[
-{text:"では25日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"次は残高を残しておいてくださいね。",effect:"normal",reply:"気をつけます。"},
-{text:"引っ越し費用の明細をください。",effect:"waste",reply:"そこまでは……。"}]}
+{
+quote:"取引先から明日入金されるんで。",
+options:[
+["明日入金されたら、明日払えますか？","good"],
+["取引先はどこですか？","waste"],
+["いくら入りますか？","waste"]
 ]
 },
-
 {
-name:"大野さん",age:"46歳",job:"会社員",rent:"81,000円",
-delay:"2か月",history:"過去にも1回遅延",
-opening:"給料日を勘違いしていて、まだ入ってないと思っていました。",
-turns:[
-{question:"確認する？",choices:[
-{text:"実際の給与支給日は何日ですか？",effect:"payment",reply:"15日です。"},
-{text:"なぜ勘違いしたんですか？",effect:"waste",reply:"カレンダーを見間違えました。"},
-{text:"会社に確認しましたか？",effect:"normal",reply:"はい。"}]},
-{question:"15日と分かった。",choices:[
-{text:"15日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"給料はいくらですか？",effect:"waste",reply:"それは……。"},
-{text:"今日払う方法は？",effect:"normal",reply:"ありません。"}]},
-{question:"最後。",choices:[
-{text:"では15日にお願いします。",effect:"payment",reply:"はい。"},
-{text:"次は確認してくださいね。",effect:"normal",reply:"はい。"},
-{text:"給与明細を見せてください。",effect:"waste",reply:"そこまでは……。"}]}
+quote:"払えると思います。",
+options:[
+["「払える」とは、明日支払えるということですか？","good"],
+["本当に入金されますか？","waste"],
+["では明日お願いします","bad"]
 ]
 },
-
 {
-name:"水野さん",age:"41歳",job:"会社員",rent:"75,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"家賃の支払いを完全に忘れていました。申し訳ありません。",
-turns:[
-{question:"どうする？",choices:[
-{text:"いつなら支払えますか？",effect:"payment",reply:"今日中に払えます。"},
-{text:"なぜ忘れたんですか？",effect:"waste",reply:"忙しくて……。"},
-{text:"本当に忘れたんですか？",effect:"normal",reply:"はい。"}]},
-{question:"今日払える。",choices:[
-{text:"では今日中にお願いします。",effect:"payment",reply:"はい。"},
-{text:"忙しかったんですね。",effect:"normal",reply:"すみません。"},
-{text:"スケジュールを見せてください。",effect:"waste",reply:"そこまでは……。"}]},
-{question:"最後。",choices:[
-{text:"では本日を支払日としてお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"次回から忘れないでください。",effect:"normal",reply:"はい。"},
-{text:"本当に今日払いますか？",effect:"payment",reply:"はい。"}]}
+quote:"……たぶん。",
+options:[
+["明日支払えるか、確定できますか？","payfalse"],
+["では明日また電話します","bad"],
+["取引先の話を詳しく聞く","waste"]
 ]
+}
+]
 },
 
 {
-name:"岩田さん",age:"50歳",job:"会社員",rent:"88,000円",
-delay:"3か月",history:"過去にも4回遅延",
-opening:"親戚からお金を借りる予定なんですが、まだ返事がなくて。",
+name:"長谷川さん",
+age:"42歳",
+job:"パート",
+rent:"64,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
-{question:"何を聞く？",choices:[
-{text:"親戚から借りられなかった場合、いつなら払えますか？",effect:"payment",reply:"給料日なら払えます。"},
-{text:"親戚は誰ですか？",effect:"waste",reply:"叔父です。"},
-{text:"いくら借りる予定ですか？",effect:"waste",reply:"分かりません。"}]},
-{question:"給料日を聞く。",choices:[
-{text:"給料日は何日ですか？",effect:"payment",reply:"28日です。"},
-{text:"叔父さんに今電話できますか？",effect:"normal",reply:"今は無理です。"},
-{text:"借りられるといいですね。",effect:"normal",reply:"はい。"}]},
-{question:"最後。",choices:[
-{text:"では28日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"叔父さんから借りられなかったら？",effect:"confused",reply:"そのときは……。"},
-{text:"また連絡してください。",effect:"normal",reply:"分かりました。"}]}
+{
+quote:"今月だけ勤務日数が減って、お給料が少なくて……。",
+options:[
+["いつなら支払えますか？","good"],
+["何日勤務が減ったんですか？","waste"],
+["大変ですね","bad"]
 ]
 },
-
 {
-name:"黒田さん",age:"32歳",job:"会社員",rent:"78,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"会社の経費精算がまだ入ってなくて、少し足りません。",
-turns:[
-{question:"何を聞く？",choices:[
-{text:"経費精算はいつ入りますか？",effect:"payment",reply:"7日です。"},
-{text:"何の経費ですか？",effect:"waste",reply:"出張費です。"},
-{text:"いくら足りないんですか？",effect:"normal",reply:"2万円くらいです。"}]},
-{question:"7日と分かった。",choices:[
-{text:"7日に家賃を支払えますか？",effect:"payment",reply:"はい。"},
-{text:"経費精算の明細を見せてください。",effect:"waste",reply:"そこまでは……。"},
-{text:"会社に早めてもらえませんか？",effect:"normal",reply:"聞いてみます。"}]},
-{question:"最後。",choices:[
-{text:"では7日にお願いします。",effect:"payment",reply:"はい。"},
-{text:"会社にも確認してください。",effect:"normal",reply:"分かりました。"},
-{text:"出張大変でしたね。",effect:"waste",reply:"ありがとうございます。"}]}
+quote:"来月10日なら払えます。",
+options:[
+["10日に支払えますか？","good"],
+["来月なら大丈夫ですね","bad"],
+["勤務日数を教えてください","waste"]
 ]
 },
-
 {
-name:"上田さん",age:"59歳",job:"会社員",rent:"62,000円",
-delay:"2か月",history:"過去にも1回遅延",
-opening:"病院代が重なってしまって、今月だけ厳しいです。",
-turns:[
-{question:"どう聞く？",choices:[
-{text:"次に支払える日はいつですか？",effect:"payment",reply:"年金が入る15日です。"},
-{text:"どこの病院ですか？",effect:"waste",reply:"それはちょっと……。"},
-{text:"治療費はいくらでした？",effect:"waste",reply:"かなりかかりました。"}]},
-{question:"15日と分かった。",choices:[
-{text:"15日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"病院代は今後もかかりますか？",effect:"normal",reply:"しばらくは。"},
-{text:"家族に借りられませんか？",effect:"normal",reply:"難しいです。"}]},
-{question:"最後。",choices:[
-{text:"では15日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"お大事にしてください。",effect:"normal",reply:"ありがとうございます。"},
-{text:"診療明細をください。",effect:"waste",reply:"必要ですか？"}]}
+quote:"はい。",
+options:[
+["では来月10日のお支払いでお願いします","pay"],
+["本当に払えますか？","waste"],
+["11日でもいいですよ","bad"]
 ]
+}
+]
 },
 
 {
-name:"丸山さん",age:"28歳",job:"会社員",rent:"69,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"スマホをなくして銀行アプリが使えなくなっていました。",
+name:"石川さん",
+age:"36歳",
+job:"会社員",
+rent:"85,000円",
+arrears:"2か月",
+type:"normal",
+willPay:false,
 turns:[
-{question:"何を聞く？",choices:[
-{text:"別の方法で今日振り込めますか？",effect:"payment",reply:"ATMならできます。"},
-{text:"スマホは何色でした？",effect:"waste",reply:"黒です。"},
-{text:"警察には届けましたか？",effect:"normal",reply:"はい。"}]},
-{question:"ATMなら払える。",choices:[
-{text:"では今日中に振り込めますか？",effect:"payment",reply:"はい。"},
-{text:"スマホはいつなくしたんですか？",effect:"waste",reply:"昨日です。"},
-{text:"新しいスマホを買えば？",effect:"normal",reply:"そうします。"}]},
-{question:"最後。",choices:[
-{text:"では本日中の振込をお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"スマホには気をつけてくださいね。",effect:"normal",reply:"はい。"},
-{text:"スマホを見つけたら連絡ください。",effect:"waste",reply:"はい……。"}]}
+{
+quote:"カードの限度額いっぱいになってしまって、家賃を払えなかったんです。",
+options:[
+["では、いつなら家賃を支払えますか？","good"],
+["何にカードを使ったんですか？","waste"],
+["限度額はいくらですか？","waste"]
 ]
 },
-
 {
-name:"相沢さん",age:"47歳",job:"会社員",rent:"83,000円",
-delay:"2か月",history:"過去にも3回遅延",
-opening:"親に借りに行こうと思っています。",
-turns:[
-{question:"まず何を聞く？",choices:[
-{text:"いつ借りに行く予定ですか？",effect:"payment",reply:"明日です。"},
-{text:"ご両親はどこに住んでいますか？",effect:"waste",reply:"実家です。"},
-{text:"いくら借りますか？",effect:"normal",reply:"家賃分くらいです。"}]},
-{question:"明日借りに行く。",choices:[
-{text:"明日借りられたら、明日払えますか？",effect:"payment",reply:"実家が遠いので明日は無理かもしれません。"},
-{text:"実家はどこですか？",effect:"waste",reply:"遠いところです。"},
-{text:"じゃあ今日借りに行ってください。",effect:"normal",reply:"無理です。"}]},
-{question:"いつ払える？",choices:[
-{text:"では、いつなら支払えますか？",effect:"payment",reply:"明後日には必ず。"},
-{text:"明日無理ならなぜ明日行くんですか？",effect:"waste",reply:"……。"},
-{text:"親御さんに振り込んでもらえば？",effect:"normal",reply:"聞いてみます。"}]}
+quote:"明日お金が入ってくるんで、払えると思います。",
+options:[
+["明日、家賃を支払えますか？","good"],
+["何のお金ですか？","waste"],
+["カードを使いすぎましたね","bad"]
 ]
 },
-
 {
-name:"野口さん",age:"54歳",job:"自営業",rent:"94,000円",
-delay:"3か月",history:"過去にも5回遅延",
-opening:"大口の取引が決まれば一気に払えるんです。",
-turns:[
-{question:"どうする？",choices:[
-{text:"取引が決まらなくても、いつなら払えますか？",effect:"payment",reply:"来月10日なら何とか。"},
-{text:"大口っていくらですか？",effect:"waste",reply:"かなりです。"},
-{text:"その取引先は信用できますか？",effect:"normal",reply:"大丈夫だと思います。"}]},
-{question:"10日と分かった。",choices:[
-{text:"10日に支払えるということでいいですか？",effect:"payment",reply:"はい。"},
-{text:"取引が決まらなかったら？",effect:"normal",reply:"そのときは考えます。"},
-{text:"契約書を見せてください。",effect:"waste",reply:"まだです。"}]},
-{question:"最後。",choices:[
-{text:"では10日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"取引、頑張ってください。",effect:"normal",reply:"ありがとうございます。"},
-{text:"本当に大丈夫ですか？",effect:"payment",reply:"はい。"}]}
+quote:"そのお金で別の支払いもあるので……。",
+options:[
+["では、家賃を確実に支払える日はいつですか？","payfalse"],
+["別の支払いが終わるまで待ちます","bad"],
+["その支払いはいくらですか？","waste"]
 ]
+}
+]
 },
 
 {
-name:"星野さん",age:"35歳",job:"会社員",rent:"80,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"今月だけ給料の振込が遅れています。",
+name:"中原さん",
+age:"33歳",
+job:"会社員",
+rent:"73,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
-{question:"何を確認？",choices:[
-{text:"給与の入金予定日はいつですか？",effect:"payment",reply:"17日です。"},
-{text:"なぜ遅れているんですか？",effect:"waste",reply:"会社の都合です。"},
-{text:"会社名は？",effect:"waste",reply:"そこまで必要ですか？"}]},
-{question:"17日と分かった。",choices:[
-{text:"17日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"本当に給料は入りますか？",effect:"normal",reply:"はい。"},
-{text:"会社に確認しましょうか？",effect:"normal",reply:"大丈夫です。"}]},
-{question:"最後。",choices:[
-{text:"では17日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"忘れないようにしてください。",effect:"normal",reply:"分かりました。"},
-{text:"給与明細を送ってください。",effect:"waste",reply:"そこまでは……。"}]}
+{
+quote:"引き落とし口座を変えたばかりで、登録が間に合わなかったみたいです。",
+options:[
+["いつ支払えますか？","good"],
+["なぜ間に合わなかったんですか？","waste"],
+["銀行に確認します","bad"]
 ]
 },
-
 {
-name:"今井さん",age:"62歳",job:"年金生活",rent:"57,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"年金が入ったら払おうと思っていたんですが、支給日を間違えていました。",
-turns:[
-{question:"どうする？",choices:[
-{text:"正しい支給日はいつですか？",effect:"payment",reply:"15日です。"},
-{text:"なぜ間違えたんですか？",effect:"waste",reply:"勘違いでした。"},
-{text:"年金事務所に電話しましたか？",effect:"normal",reply:"してません。"}]},
-{question:"15日と分かった。",choices:[
-{text:"15日に家賃を支払えますか？",effect:"payment",reply:"はい。"},
-{text:"年金額はいくらですか？",effect:"waste",reply:"それは……。"},
-{text:"15日まで待ちます。",effect:"normal",reply:"ありがとうございます。"}]},
-{question:"最後。",choices:[
-{text:"では15日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"カレンダーに書いておいてくださいね。",effect:"normal",reply:"そうします。"},
-{text:"年金事務所に確認しましょうか？",effect:"waste",reply:"大丈夫です。"}]}
+quote:"今日なら振り込めます。",
+options:[
+["では今日のお支払いでお願いします","pay"],
+["本当に今日ですか？","waste"],
+["明日でもいいですよ","bad"]
 ]
 },
-
 {
-name:"川口さん",age:"42歳",job:"会社員",rent:"76,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"給料日前なのでどうしても厳しいです。",
-turns:[
-{question:"どう聞く？",choices:[
-{text:"次の給料日はいつですか？",effect:"payment",reply:"25日です。"},
-{text:"今の残高はいくらですか？",effect:"waste",reply:"それは言いたくありません。"},
-{text:"会社に前借りを頼めませんか？",effect:"normal",reply:"難しいです。"}]},
-{question:"25日と分かった。",choices:[
-{text:"25日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"今日一部払えませんか？",effect:"normal",reply:"無理です。"},
-{text:"給料はいくらですか？",effect:"waste",reply:"それは……。"}]},
-{question:"最後。",choices:[
-{text:"では25日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"給料日まで頑張ってください。",effect:"normal",reply:"はい。"},
-{text:"本当に払えますか？",effect:"payment",reply:"払います。"}]}
+quote:"分かりました。",
+options:[
+["ありがとうございます","pay"],
+["銀行の話を詳しく聞く","waste"],
+["口座変更の理由を聞く","waste"]
 ]
+}
+]
 },
 
 {
-name:"平田さん",age:"38歳",job:"会社員",rent:"79,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"振り込みの予約をしたつもりだったんですが、できていませんでした。",
+name:"村上さん",
+age:"56歳",
+job:"会社員",
+rent:"67,000円",
+arrears:"2か月",
+type:"normal",
+willPay:false,
 turns:[
-{question:"どうする？",choices:[
-{text:"今日改めて振り込めますか？",effect:"payment",reply:"はい。今日やります。"},
-{text:"なぜ失敗したんですか？",effect:"waste",reply:"操作ミスです。"},
-{text:"予約画面を見せてください。",effect:"normal",reply:"今確認します。"}]},
-{question:"今日払える。",choices:[
-{text:"では今日中にお願いします。",effect:"payment",reply:"はい。"},
-{text:"銀行に電話しましょうか？",effect:"normal",reply:"大丈夫です。"},
-{text:"何時にできますか？",effect:"payment",reply:"昼休みにやります。"}]},
-{question:"最後。",choices:[
-{text:"では本日中の振込でお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"次から気をつけてください。",effect:"normal",reply:"はい。"},
-{text:"予約画面を保存しておいてください。",effect:"waste",reply:"分かりました。"}]}
+{
+quote:"郵便物が届いてなくて、滞納してることを知らなかったんです。",
+options:[
+["では、いつ支払えますか？","good"],
+["どの郵便物が届かなかったんですか？","waste"],
+["郵便局に問い合わせました？","waste"]
 ]
 },
-
 {
-name:"佐野さん",age:"49歳",job:"自営業",rent:"86,000円",
-delay:"2か月",history:"過去にも4回遅延",
-opening:"今月は売上が少なくて、ちょっと厳しいです。",
-turns:[
-{question:"何を聞く？",choices:[
-{text:"では、いつなら支払えますか？",effect:"payment",reply:"20日なら。"},
-{text:"売上はいくらでした？",effect:"waste",reply:"少ないです。"},
-{text:"来月は増えますか？",effect:"normal",reply:"分かりません。"}]},
-{question:"20日と分かった。",choices:[
-{text:"20日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"本当に大丈夫ですか？",effect:"normal",reply:"はい。"},
-{text:"売上帳簿を見せてください。",effect:"waste",reply:"それはちょっと。"}]},
-{question:"最後。",choices:[
-{text:"では20日を支払日としてお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"頑張ってください。",effect:"normal",reply:"ありがとうございます。"},
-{text:"本当に払えますか？",effect:"payment",reply:"払います。"}]}
+quote:"今月中には……。",
+options:[
+["今月の何日に支払えますか？","good"],
+["郵便物はもう届きました？","bad"],
+["郵便局のせいですね","bad"]
 ]
 },
-
 {
-name:"永井さん",age:"33歳",job:"会社員",rent:"72,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"財布を落としてしまって、現金がありません。",
-turns:[
-{question:"何を聞く？",choices:[
-{text:"カードやネットバンキングで支払えますか？",effect:"payment",reply:"ネットバンキングならできます。"},
-{text:"どこで財布を落としたんですか？",effect:"waste",reply:"駅です。"},
-{text:"警察には届けましたか？",effect:"normal",reply:"はい。"}]},
-{question:"ネットバンキングが使える。",choices:[
-{text:"では今日中に振り込めますか？",effect:"payment",reply:"はい。"},
-{text:"財布には何が入っていました？",effect:"waste",reply:"カードなどです。"},
-{text:"カードを止めましたか？",effect:"normal",reply:"はい。"}]},
-{question:"最後。",choices:[
-{text:"では本日中の振込をお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"財布、見つかるといいですね。",effect:"normal",reply:"ありがとうございます。"},
-{text:"財布の中身を詳しく教えてください。",effect:"waste",reply:"それは……。"}]}
+quote:"まだ分からないです。",
+options:[
+["具体的な支払日を決めてください","payfalse"],
+["分かったら連絡ください","bad"],
+["郵便物について聞く","waste"]
 ]
+}
+]
 },
 
 {
-name:"高田さん",age:"44歳",job:"会社員",rent:"84,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"ボーナスが出たらまとめて払おうと思っています。",
+name:"石井さん",
+age:"55歳",
+job:"会社員",
+rent:"68,000円",
+arrears:"2か月",
+type:"normal",
+willPay:false,
 turns:[
-{question:"何を聞く？",choices:[
-{text:"ボーナス支給日はいつですか？",effect:"payment",reply:"30日です。"},
-{text:"ボーナスはいくらですか？",effect:"waste",reply:"分かりません。"},
-{text:"ボーナスは必ず出ますか？",effect:"normal",reply:"出る予定です。"}]},
-{question:"30日と分かった。",choices:[
-{text:"30日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"ボーナスが出なかったら？",effect:"normal",reply:"そのときは考えます。"},
-{text:"会社に確認しましょうか？",effect:"waste",reply:"大丈夫です。"}]},
-{question:"最後。",choices:[
-{text:"では30日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"忘れないでくださいね。",effect:"normal",reply:"分かりました。"},
-{text:"ボーナスの明細をください。",effect:"waste",reply:"そこまでは……。"}]}
+{
+quote:"携帯料金を払えてなくて電話が止まってたんです。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["携帯会社はどこですか？","waste"],
+["大変でしたね","bad"]
 ]
 },
-
 {
-name:"長田さん",age:"52歳",job:"会社員",rent:"70,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"子どもの塾代が重なってしまって、今月だけ足りません。",
-turns:[
-{question:"どうする？",choices:[
-{text:"次にお金が入る日はいつですか？",effect:"payment",reply:"20日です。"},
-{text:"塾はどこですか？",effect:"waste",reply:"近所です。"},
-{text:"塾代はいくらですか？",effect:"waste",reply:"結構します。"}]},
-{question:"20日と分かった。",choices:[
-{text:"20日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"塾を辞めることは？",effect:"normal",reply:"それは考えてません。"},
-{text:"今日少し払えますか？",effect:"normal",reply:"難しいです。"}]},
-{question:"最後。",choices:[
-{text:"では20日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"お子さんも大変ですね。",effect:"normal",reply:"ありがとうございます。"},
-{text:"塾の領収書をください。",effect:"waste",reply:"必要ですか？"}]}
+quote:"給料が入ったら払います。",
+options:[
+["給料日は何日ですか？","good"],
+["携帯は復旧しました？","waste"],
+["給料はいくらですか？","waste"]
+]
+},
+{
+quote:"25日ですけど、他にも支払いがあって……。",
+options:[
+["家賃を確実に支払える日はいつですか？","payfalse"],
+["他の支払いが終わるまで待ちます","bad"],
+["他の支払いはいくらですか？","waste"]
+]
+}
 ]
 },
 
 {
-name:"遠藤さん",age:"40歳",job:"会社員",rent:"81,000円",
-delay:"2か月",history:"過去にも1回遅延",
-opening:"銀行のカードが使えなくなってしまいました。",
+name:"後藤さん",
+age:"33歳",
+job:"会社員",
+rent:"73,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
-{question:"どうする？",choices:[
-{text:"別の口座から支払うことはできますか？",effect:"payment",reply:"はい。別口座があります。"},
-{text:"カードは何年使っていますか？",effect:"waste",reply:"数年です。"},
-{text:"銀行に問い合わせましたか？",effect:"normal",reply:"はい。"}]},
-{question:"別口座がある。",choices:[
-{text:"では今日振り込めますか？",effect:"payment",reply:"はい。"},
-{text:"なぜカードが止まったんですか？",effect:"waste",reply:"分かりません。"},
-{text:"新しいカードを作りましたか？",effect:"normal",reply:"手続き中です。"}]},
-{question:"最後。",choices:[
-{text:"では今日中にお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"カードは大事にしてくださいね。",effect:"normal",reply:"はい。"},
-{text:"カード会社にもう一度電話してください。",effect:"waste",reply:"分かりました。"}]}
+{
+quote:"家賃のことを完全に忘れてました……。",
+options:[
+["では、いつ支払えますか？","good"],
+["なぜ忘れたんですか？","waste"],
+["今後気をつけてください","bad"]
+]
+},
+{
+quote:"今日中に払います。",
+options:[
+["では本日のお支払いでお願いします","pay"],
+["何時に払いますか？","good"],
+["本当に忘れてたんですか？","waste"]
+]
+},
+{
+quote:"はい。",
+options:[
+["ありがとうございます","pay"],
+["忘れた理由を聞く","waste"],
+["明日でもいいですよ","bad"]
+]
+}
 ]
 },
 
 {
-name:"浅井さん",age:"46歳",job:"自営業",rent:"91,000円",
-delay:"3か月",history:"過去にも4回遅延",
-opening:"明日、知り合いがお金を返してくれる予定なんです。",
+name:"西村さん",
+age:"53歳",
+job:"会社員",
+rent:"84,000円",
+arrears:"2か月",
+type:"normal",
+willPay:false,
 turns:[
-{question:"どうする？",choices:[
-{text:"返してもらえなかった場合、いつ支払えますか？",effect:"payment",reply:"給料日の25日です。"},
-{text:"知り合いは誰ですか？",effect:"waste",reply:"友人です。"},
-{text:"いくら貸していたんですか？",effect:"waste",reply:"それはちょっと。"}]},
-{question:"25日と分かった。",choices:[
-{text:"25日には支払えますか？",effect:"payment",reply:"はい。"},
-{text:"明日返してもらえれば今日払えますか？",effect:"normal",reply:"はい。"},
-{text:"友人に電話してください。",effect:"normal",reply:"あとでします。"}]},
-{question:"最後。",choices:[
-{text:"では25日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"友人には早く返してもらいましょう。",effect:"normal",reply:"そうします。"},
-{text:"友人との関係を詳しく教えてください。",effect:"waste",reply:"それは……。"}]}
+{
+quote:"もう退職することになってまして、引っ越すつもりなんです。",
+options:[
+["では、家賃はいつまでに支払えますか？","good"],
+["どこに引っ越すんですか？","waste"],
+["退職日はいつですか？","waste"]
+]
+},
+{
+quote:"今月いっぱいです。",
+options:[
+["今月の何日に支払えますか？","good"],
+["引っ越し先は決まりました？","waste"],
+["退職理由は？","waste"]
+]
+},
+{
+quote:"まだ決まってないんです。",
+options:[
+["では具体的な支払日を決められますか？","payfalse"],
+["決まったら連絡ください","bad"],
+["引っ越しについて詳しく聞く","waste"]
+]
+}
 ]
 },
 
-/* =========================
-追加の変な人
-========================= */
+/* ===== 追加の変人 ===== */
 
 {
-name:"川島さん",age:"51歳",job:"会社員",rent:"78,000円",
-delay:"2か月",history:"過去にも3回遅延",
-opening:"朝起きたら靴が全部逆向きに並んでいて、今日は外に出ると危険なんです。",
+name:"橋本さん",
+age:"44歳",
+job:"会社員",
+rent:"79,000円",
+arrears:"2か月",
+type:"crazy",
+willPay:true,
 turns:[
-{question:"どうする？",choices:[
-{text:"では、いつなら外に出て支払いできますか？",effect:"payment",reply:"靴が直れば明日です。"},
-{text:"靴は何足ありますか？",effect:"waste",reply:"10足くらい。"},
-{text:"靴を戻してください。",effect:"normal",reply:"怖くて触れません。"}]},
-{question:"明日なら払える。",choices:[
-{text:"では明日、支払えますか？",effect:"payment",reply:"はい。靴が普通なら。"},
-{text:"靴の写真を送ってください。",effect:"waste",reply:"嫌です。"},
-{text:"裸足で行けば？",effect:"confused",reply:"それはもっと危険です。"}]},
-{question:"最後。",choices:[
-{text:"では明日を支払予定日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"靴が直らなかったら？",effect:"confused",reply:"分かりません。"},
-{text:"気をつけてください。",effect:"normal",reply:"はい。"}]}
+{
+quote:"昨日、靴下が右足だけ私の言うことを聞かなかったんですよ。",
+options:[
+["それで、家賃はいつ支払えますか？","good"],
+["どんな靴下ですか？","waste"],
+["左足は大丈夫でしたか？","waste"]
 ]
 },
-
 {
-name:"平井さん",age:"47歳",job:"会社員",rent:"83,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"朝から部屋の時計が全部13時を指していて、時間の感覚がおかしいんです。",
-turns:[
-{question:"何を聞く？",choices:[
-{text:"では、支払いはいつできますか？",effect:"payment",reply:"明日の朝なら大丈夫だと思います。"},
-{text:"時計は何個ありますか？",effect:"waste",reply:"4個です。"},
-{text:"電池を交換しましたか？",effect:"normal",reply:"してません。"}]},
-{question:"明日と言われた。",choices:[
-{text:"では明日中に振り込めますか？",effect:"payment",reply:"はい。"},
-{text:"今何時か分かりますか？",effect:"waste",reply:"分かりません。"},
-{text:"スマホの時計を見てください。",effect:"normal",reply:"スマホも13時です。"}]},
-{question:"最後。",choices:[
-{text:"では明日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"時計を直しておいてくださいね。",effect:"normal",reply:"はい。"},
-{text:"時計を全部捨てましょう。",effect:"waste",reply:"それは困ります。"}]}
+quote:"今日は両方とも言うことを聞いてます。",
+options:[
+["では、今日支払えますか？","good"],
+["靴下を履き替えました？","waste"],
+["それは良かったですね","bad"]
 ]
 },
-
 {
-name:"岡本さん",age:"39歳",job:"会社員",rent:"74,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"昨日から猫が家賃を払うなって言ってるんです。",
-turns:[
-{question:"どう対応する？",choices:[
-{text:"猫の話は置いて、支払いはいつできますか？",effect:"payment",reply:"明後日です。"},
-{text:"猫は何歳ですか？",effect:"waste",reply:"7歳です。"},
-{text:"猫を説得してください。",effect:"confused",reply:"説得しても聞いてくれません。"}]},
-{question:"明後日と分かった。",choices:[
-{text:"では明後日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"猫は普段何を食べますか？",effect:"waste",reply:"それ今関係あります？"},
-{text:"猫が許したら払ってください。",effect:"normal",reply:"分かりました。"}]},
-{question:"最後。",choices:[
-{text:"では明後日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"猫にもよろしく伝えてください。",effect:"normal",reply:"……はい。"},
-{text:"猫の名前を教えてください。",effect:"waste",reply:"なんでですか？"}]}
+quote:"はい、今日振り込みます。",
+options:[
+["では本日のお支払いでお願いします","pay"],
+["靴下にもよろしく伝えてください","bad"],
+["本当に大丈夫ですか？","waste"]
+]
+}
 ]
 },
 
-/* =========================
-普通
-========================= */
-
 {
-name:"中西さん",age:"43歳",job:"会社員",rent:"77,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"給料日のあとに自動引き落としされると思っていました。",
+name:"山下さん",
+age:"48歳",
+job:"自営業",
+rent:"87,000円",
+arrears:"3か月",
+type:"crazy",
+willPay:false,
 turns:[
-{question:"何を聞く？",choices:[
-{text:"いつ入金されますか？",effect:"payment",reply:"15日です。"},
-{text:"なぜ確認しなかったんですか？",effect:"waste",reply:"忘れてました。"},
-{text:"銀行に問い合わせましたか？",effect:"normal",reply:"はい。"}]},
-{question:"15日と分かった。",choices:[
-{text:"15日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"引き落とし口座はどこですか？",effect:"normal",reply:"○○銀行です。"},
-{text:"口座残高はいくらですか？",effect:"waste",reply:"それは……。"}]},
-{question:"最後。",choices:[
-{text:"では15日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"次から気をつけてください。",effect:"normal",reply:"分かりました。"},
-{text:"銀行にもう一度確認してください。",effect:"waste",reply:"はい。"}]}
+{
+quote:"家の時計が全部13時を指してるんですよ。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["時計は何個ありますか？","waste"],
+["電池を交換しました？","waste"]
+]
+},
+{
+quote:"13時にならないと銀行に行けないんです。",
+options:[
+["では、13時になったらいつ支払えますか？","good"],
+["今何時ですか？","waste"],
+["銀行は何時までですか？","waste"]
+]
+},
+{
+quote:"13時になったら考えます。",
+options:[
+["具体的な支払日を決められますか？","payfalse"],
+["では13時まで待ちます","bad"],
+["時計について詳しく聞く","waste"]
 ]
+}
+]
 },
 
 {
-name:"河野さん",age:"36歳",job:"会社員",rent:"73,000円",
-delay:"2か月",history:"過去にも1回遅延",
-opening:"家賃を払うのを後回しにしてしまいました。",
+name:"松本さん",
+age:"31歳",
+job:"会社員",
+rent:"75,000円",
+arrears:"1か月",
+type:"weird",
+willPay:true,
 turns:[
-{question:"どう聞く？",choices:[
-{text:"では、いつなら支払えますか？",effect:"payment",reply:"10日です。"},
-{text:"何を優先したんですか？",effect:"waste",reply:"生活費です。"},
-{text:"なぜ家賃を後回しに？",effect:"normal",reply:"考えが甘かったです。"}]},
-{question:"10日と分かった。",choices:[
-{text:"10日に必ず払えますか？",effect:"payment",reply:"はい。"},
-{text:"生活費はいくらですか？",effect:"waste",reply:"それは……。"},
-{text:"今から払えませんか？",effect:"normal",reply:"無理です。"}]},
-{question:"最後。",choices:[
-{text:"では10日を支払日としてお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"次から家賃を優先してください。",effect:"normal",reply:"はい。"},
-{text:"反省していますか？",effect:"waste",reply:"しています。"}]}
+{
+quote:"カラスに財布を見られたので、今日はお金を出したくないんです。",
+options:[
+["では、いつ支払えますか？","good"],
+["カラスは何羽いました？","waste"],
+["財布を隠しました？","waste"]
+]
+},
+{
+quote:"明日なら大丈夫です。",
+options:[
+["明日支払えますか？","good"],
+["カラスは明日も来ますか？","waste"],
+["では明日まで待ちます","bad"]
+]
+},
+{
+quote:"はい、明日払います。",
+options:[
+["では明日のお支払いでお願いします","pay"],
+["カラスに気をつけてください","bad"],
+["本当に払えますか？","waste"]
 ]
+}
+]
 },
 
 {
-name:"宮本さん",age:"58歳",job:"会社員",rent:"65,000円",
-delay:"2か月",history:"過去にも2回遅延",
-opening:"保険の返戻金が入る予定なんです。",
+name:"森下さん",
+age:"57歳",
+job:"会社員",
+rent:"66,000円",
+arrears:"2か月",
+type:"crazy",
+willPay:false,
 turns:[
-{question:"何を聞く？",choices:[
-{text:"返戻金はいつ入りますか？",effect:"payment",reply:"18日です。"},
-{text:"保険会社はどこですか？",effect:"waste",reply:"それはちょっと。"},
-{text:"いくら戻るんですか？",effect:"normal",reply:"家賃以上です。"}]},
-{question:"18日と分かった。",choices:[
-{text:"18日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"返戻金が遅れたら？",effect:"normal",reply:"そのときは考えます。"},
-{text:"保険証券を見せてください。",effect:"waste",reply:"そこまでは……。"}]},
-{question:"最後。",choices:[
-{text:"では18日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"返戻金が入るといいですね。",effect:"normal",reply:"ありがとうございます。"},
-{text:"本当に入りますか？",effect:"payment",reply:"その予定です。"}]}
+{
+quote:"昨日、夢の中で銀行が閉店してたんですよ。",
+options:[
+["現実ではいつ支払えますか？","good"],
+["夢の銀行はどんな建物でした？","waste"],
+["銀行員はいました？","waste"]
+]
+},
+{
+quote:"だから現実の銀行も怖くて……。",
+options:[
+["銀行に行かなくても支払える日はいつですか？","good"],
+["夢の続きは見ました？","waste"],
+["怖いなら無理しなくていいですよ","bad"]
+]
+},
+{
+quote:"いつになるか分からないです。",
+options:[
+["具体的な支払日を決められますか？","payfalse"],
+["分かったら連絡してください","bad"],
+["夢について詳しく聞く","waste"]
 ]
+}
+]
 },
 
 {
-name:"野田さん",age:"41歳",job:"会社員",rent:"81,000円",
-delay:"1か月",history:"過去の滞納なし",
-opening:"子どもの入学準備で出費が多かったんです。",
+name:"原さん",
+age:"39歳",
+job:"会社員",
+rent:"81,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
 turns:[
-{question:"どうする？",choices:[
-{text:"次に支払える日はいつですか？",effect:"payment",reply:"25日です。"},
-{text:"何を買ったんですか？",effect:"waste",reply:"制服とかです。"},
-{text:"いくら使ったんですか？",effect:"waste",reply:"結構です。"}]},
-{question:"25日と分かった。",choices:[
-{text:"25日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"学校生活は大丈夫ですか？",effect:"normal",reply:"大丈夫です。"},
-{text:"今日一部払えませんか？",effect:"normal",reply:"厳しいです。"}]},
-{question:"最後。",choices:[
-{text:"では25日を支払日としてお願いします。",effect:"payment",reply:"はい。"},
-{text:"入学おめでとうございます。",effect:"normal",reply:"ありがとうございます。"},
-{text:"制服の値段を教えてください。",effect:"waste",reply:"そこまでは……。"}]}
+{
+quote:"カードの引き落としと重なってしまって。",
+options:[
+["いつなら家賃を支払えますか？","good"],
+["カードは何に使ったんですか？","waste"],
+["カード会社に連絡しました？","waste"]
+]
+},
+{
+quote:"給料日なら払えます。",
+options:[
+["給料日は何日ですか？","good"],
+["給料日まで待ちます","bad"],
+["給料はいくらですか？","waste"]
+]
+},
+{
+quote:"25日です。",
+options:[
+["25日に支払えますか？","pay"],
+["では25日まで待ちます","bad"],
+["カードの利用状況を教えてください","waste"]
+]
+}
 ]
 },
 
 {
-name:"松田さん",age:"50歳",job:"会社員",rent:"70,000円",
-delay:"2か月",history:"過去にも3回遅延",
-opening:"来週には何とかします。",
+name:"遠藤さん",
+age:"46歳",
+job:"自営業",
+rent:"93,000円",
+arrears:"3か月",
+type:"normal",
+willPay:false,
 turns:[
-{question:"どう聞く？",choices:[
-{text:"来週の何日に支払えますか？",effect:"payment",reply:"木曜日です。"},
-{text:"何とかってどういう意味ですか？",effect:"waste",reply:"払うということです。"},
-{text:"本当に払うんですか？",effect:"normal",reply:"はい。"}]},
-{question:"木曜日と分かった。",choices:[
-{text:"木曜日に支払えますか？",effect:"payment",reply:"はい。"},
-{text:"もし無理だったら？",effect:"normal",reply:"そのときは相談します。"},
-{text:"今日払えませんか？",effect:"normal",reply:"無理です。"}]},
-{question:"最後。",choices:[
-{text:"では木曜日を支払日としてお願いします。",effect:"payment",reply:"分かりました。"},
-{text:"絶対お願いします。",effect:"normal",reply:"はい。"},
-{text:"木曜日の予定を教えてください。",effect:"waste",reply:"そこまで？"}]}
+{
+quote:"今月は売上が本当に厳しくて……。",
+options:[
+["いつなら支払えますか？","good"],
+["売上はいくらですか？","waste"],
+["大変ですね","bad"]
+]
+},
+{
+quote:"来月には何とかします。",
+options:[
+["来月の何日に支払えますか？","good"],
+["何とかするってどういう意味ですか？","waste"],
+["では来月まで待ちます","bad"]
+]
+},
+{
+quote:"まだ何とも言えないです。",
+options:[
+["具体的な支払日を決められますか？","payfalse"],
+["また連絡ください","bad"],
+["売上の話を聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"川口さん",
+age:"28歳",
+job:"会社員",
+rent:"69,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"給料の振込先を変更したら、反映が遅れてしまって。",
+options:[
+["いつ入金されますか？","good"],
+["なぜ変更したんですか？","waste"],
+["会社に確認します","bad"]
+]
+},
+{
+quote:"明日です。",
+options:[
+["明日支払えますか？","good"],
+["明日まで待ちます","bad"],
+["新しい銀行はどこですか？","waste"]
+]
+},
+{
+quote:"はい、明日払います。",
+options:[
+["では明日のお支払いでお願いします","pay"],
+["本当に大丈夫ですか？","waste"],
+["明後日でもいいですよ","bad"]
+]
+}
+]
+},
+
+{
+name:"野口さん",
+age:"52歳",
+job:"会社員",
+rent:"74,000円",
+arrears:"2か月",
+type:"weird",
+willPay:false,
+turns:[
+{
+quote:"昨日、家の鍵が私を家の中に閉じ込めようとしてきたんですよ。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["鍵はどんな形でした？","waste"],
+["鍵を交換しました？","waste"]
+]
+},
+{
+quote:"今日は外に出られます。",
+options:[
+["では、いつ支払えますか？","good"],
+["鍵は大丈夫ですか？","waste"],
+["良かったですね","bad"]
+]
+},
+{
+quote:"外に出てから考えます。",
+options:[
+["具体的な支払日を決めてください","payfalse"],
+["では出られたら連絡ください","bad"],
+["鍵の話を聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"大西さん",
+age:"35歳",
+job:"会社員",
+rent:"77,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"今月だけ残業代が少なくて。",
+options:[
+["いつ支払えますか？","good"],
+["残業は何時間しました？","waste"],
+["会社に確認しましょうか？","bad"]
+]
+},
+{
+quote:"給料日には払えます。",
+options:[
+["給料日は何日ですか？","good"],
+["給料日なら大丈夫ですね","bad"],
+["残業代はいくら減りました？","waste"]
+]
+},
+{
+quote:"25日です。",
+options:[
+["25日に支払えますか？","pay"],
+["25日まで待ちます","bad"],
+["会社の給与制度を教えてください","waste"]
+]
+}
+]
+},
+
+{
+name:"武田さん",
+age:"43歳",
+job:"自営業",
+rent:"88,000円",
+arrears:"2か月",
+type:"weird",
+willPay:true,
+turns:[
+{
+quote:"昨日、猫が通帳の上で寝ていて、銀行に行けなかったんです。",
+options:[
+["では、いつ支払えますか？","good"],
+["猫は何歳ですか？","waste"],
+["通帳をどかせばよかったのでは？","waste"]
+]
+},
+{
+quote:"今日なら猫も寝てないので大丈夫です。",
+options:[
+["では今日支払えますか？","good"],
+["猫はどこにいますか？","waste"],
+["猫によろしく伝えてください","bad"]
+]
+},
+{
+quote:"はい、今日振り込みます。",
+options:[
+["本日のお支払いでお願いします","pay"],
+["猫がまた寝たら教えてください","bad"],
+["本当に大丈夫ですか？","waste"]
+]
+}
+]
+},
+
+{
+name:"新井さん",
+age:"60歳",
+job:"年金生活",
+rent:"59,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"年金の支給日を勘違いしていました。",
+options:[
+["年金はいつ入りますか？","good"],
+["なぜ勘違いしたんですか？","waste"],
+["年金事務所に確認しました？","bad"]
+]
+},
+{
+quote:"明日です。",
+options:[
+["明日支払えますか？","good"],
+["明日まで待ちます","bad"],
+["年金はいくらですか？","waste"]
+]
+},
+{
+quote:"はい、明日払います。",
+options:[
+["では明日のお支払いでお願いします","pay"],
+["本当に明日ですか？","waste"],
+["明後日でも大丈夫です","bad"]
+]
+}
+]
+},
+
+{
+name:"柴田さん",
+age:"41歳",
+job:"会社員",
+rent:"82,000円",
+arrears:"2か月",
+type:"normal",
+willPay:false,
+turns:[
+{
+quote:"家族の急な出費があってしまって。",
+options:[
+["では、いつ支払えますか？","good"],
+["誰が何に使ったんですか？","waste"],
+["それは大変ですね","bad"]
+]
+},
+{
+quote:"来月の給料日には。",
+options:[
+["給料日は何日ですか？","good"],
+["来月まで待ちます","bad"],
+["家族に借りられませんか？","waste"]
+]
+},
+{
+quote:"他の支払いもあるので、まだ分からないです。",
+options:[
+["確実に支払える日を決められますか？","payfalse"],
+["ではまた連絡ください","bad"],
+["他の支払いはいくらですか？","waste"]
+]
+}
+]
+},
+
+{
+name:"岡本さん",
+age:"37歳",
+job:"会社員",
+rent:"76,000円",
+arrears:"1か月",
+type:"weird",
+willPay:true,
+turns:[
+{
+quote:"昨日、財布を探していたら財布の中に財布が入っていたんです。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["中に入っていた財布は何色ですか？","waste"],
+["それは珍しいですね","bad"]
+]
+},
+{
+quote:"お金はありました。",
+options:[
+["では、いつ振り込めますか？","good"],
+["財布はどうしました？","waste"],
+["良かったですね","bad"]
+]
+},
+{
+quote:"今日振り込みます。",
+options:[
+["では本日のお支払いでお願いします","pay"],
+["財布の話を詳しく聞く","waste"],
+["本当に払えますか？","waste"]
+]
+}
+]
+},
+
+{
+name:"平野さん",
+age:"54歳",
+job:"自営業",
+rent:"95,000円",
+arrears:"3か月",
+type:"normal",
+willPay:false,
+turns:[
+{
+quote:"大きな仕事が入る予定なんです。",
+options:[
+["その仕事の入金はいつですか？","good"],
+["どんな仕事ですか？","waste"],
+["それは良かったですね","bad"]
+]
+},
+{
+quote:"来月くらいです。",
+options:[
+["来月の何日に入金されますか？","good"],
+["仕事の規模は？","waste"],
+["では来月まで待ちます","bad"]
+]
+},
+{
+quote:"まだ契約前なので分かりません。",
+options:[
+["具体的な支払日は決められますか？","payfalse"],
+["契約が決まったら連絡ください","bad"],
+["契約内容を詳しく聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"小泉さん",
+age:"45歳",
+job:"会社員",
+rent:"80,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"振込先を間違えてしまっていました。",
+options:[
+["いつ正しい口座に振り込めますか？","good"],
+["なぜ間違えたんですか？","waste"],
+["どこに振り込んだんですか？","waste"]
+]
+},
+{
+quote:"今日中にできます。",
+options:[
+["では今日のお支払いでお願いします","pay"],
+["本当に今日ですか？","waste"],
+["明日でも大丈夫です","bad"]
+]
+},
+{
+quote:"分かりました。",
+options:[
+["ありがとうございます","pay"],
+["間違えた理由を聞く","waste"],
+["銀行に確認します","bad"]
+]
+}
+]
+},
+
+{
+name:"関口さん",
+age:"49歳",
+job:"会社員",
+rent:"72,000円",
+arrears:"2か月",
+type:"crazy",
+willPay:false,
+turns:[
+{
+quote:"昨日から天井が私のことを見ている気がするんです。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["天井に顔がありますか？","waste"],
+["写真を撮りましょうか？","waste"]
+]
+},
+{
+quote:"天井が見ている間は銀行に行けません。",
+options:[
+["銀行に行かなくても、いつ支払えますか？","good"],
+["天井から目をそらしてみてください","bad"],
+["いつから見られてますか？","waste"]
+]
+},
+{
+quote:"天井が許してくれたら……。",
+options:[
+["具体的な支払日を決められますか？","payfalse"],
+["天井と相談してください","bad"],
+["天井について詳しく聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"田村さん",
+age:"32歳",
+job:"会社員",
+rent:"71,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"今月だけ給料日がずれました。",
+options:[
+["給料日はいつですか？","good"],
+["なぜずれたんですか？","waste"],
+["会社に電話します","bad"]
+]
+},
+{
+quote:"27日です。",
+options:[
+["27日に支払えますか？","good"],
+["27日まで待ちます","bad"],
+["給料はいくらですか？","waste"]
+]
+},
+{
+quote:"はい。",
+options:[
+["では27日のお支払いでお願いします","pay"],
+["本当に大丈夫ですか？","waste"],
+["28日でもいいですよ","bad"]
+]
+}
+]
+},
+
+{
+name:"小田さん",
+age:"59歳",
+job:"年金生活",
+rent:"62,000円",
+arrears:"2か月",
+type:"weird",
+willPay:false,
+turns:[
+{
+quote:"昨日、財布が私より先に家を出ていった気がします。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["財布はどこに行ったんですか？","waste"],
+["財布を探しました？","waste"]
+]
+},
+{
+quote:"戻ってきてないんです。",
+options:[
+["財布がなくても、いつ支払えますか？","good"],
+["警察に届けました？","waste"],
+["財布を待ちましょう","bad"]
+]
+},
+{
+quote:"戻ってきたら考えます。",
+options:[
+["具体的な支払日を決められますか？","payfalse"],
+["財布が戻ったら連絡ください","bad"],
+["財布について詳しく聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"吉川さん",
+age:"38歳",
+job:"会社員",
+rent:"78,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"急な出費があって残高が足りませんでした。",
+options:[
+["いつなら支払えますか？","good"],
+["何に使ったんですか？","waste"],
+["銀行に相談しました？","bad"]
+]
+},
+{
+quote:"給料日なら払えます。",
+options:[
+["給料日は何日ですか？","good"],
+["給料日まで待ちます","bad"],
+["給料はいくらですか？","waste"]
+]
+},
+{
+quote:"20日です。",
+options:[
+["20日に支払えますか？","pay"],
+["21日でもいいですよ","bad"],
+["出費の内容を聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"三浦さん",
+age:"46歳",
+job:"自営業",
+rent:"91,000円",
+arrears:"3か月",
+type:"normal",
+willPay:false,
+turns:[
+{
+quote:"売掛金がまだ入ってこなくて。",
+options:[
+["入金予定日はいつですか？","good"],
+["いくらの売掛金ですか？","waste"],
+["取引先はどこですか？","waste"]
+]
+},
+{
+quote:"月末くらいです。",
+options:[
+["月末の何日に支払えますか？","good"],
+["月末まで待ちます","bad"],
+["売掛金の話を聞く","waste"]
+]
+},
+{
+quote:"まだ入金日が確定してないです。",
+options:[
+["確実な支払日を決められますか？","payfalse"],
+["確定したら連絡ください","bad"],
+["取引先について聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"安田さん",
+age:"34歳",
+job:"会社員",
+rent:"74,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"家賃を払うのを忘れていました。",
+options:[
+["いつ支払えますか？","good"],
+["どうして忘れたんですか？","waste"],
+["気をつけてください","bad"]
+]
+},
+{
+quote:"今日払います。",
+options:[
+["では今日のお支払いでお願いします","pay"],
+["何時に払いますか？","good"],
+["本当に忘れてたんですか？","waste"]
+]
+},
+{
+quote:"はい。",
+options:[
+["ありがとうございます","pay"],
+["忘れた理由を聞く","waste"],
+["明日でもいいですよ","bad"]
+]
+}
+]
+},
+
+{
+name:"松田さん",
+age:"51歳",
+job:"会社員",
+rent:"83,000円",
+arrears:"2か月",
+type:"weird",
+willPay:true,
+turns:[
+{
+quote:"家の時計が逆回りしてるので、時間の感覚がなくなってました。",
+options:[
+["では、いつ支払えますか？","good"],
+["時計はどこのメーカーですか？","waste"],
+["時計を止めました？","waste"]
+]
+},
+{
+quote:"給料日は25日なので、そこなら大丈夫です。",
+options:[
+["25日に支払えますか？","good"],
+["時計は直りました？","waste"],
+["給料はいくらですか？","waste"]
+]
+},
+{
+quote:"はい、25日に払います。",
+options:[
+["25日のお支払いでお願いします","pay"],
+["時計が直るといいですね","bad"],
+["本当に払えますか？","waste"]
+]
+}
+]
+},
+
+{
+name:"藤原さん",
+age:"48歳",
+job:"自営業",
+rent:"88,000円",
+arrears:"2か月",
+type:"normal",
+willPay:false,
+turns:[
+{
+quote:"今月はちょっと厳しくて……。",
+options:[
+["いつなら支払えますか？","good"],
+["何が厳しいんですか？","waste"],
+["大変ですね","bad"]
+]
+},
+{
+quote:"来月なら何とか。",
+options:[
+["来月の何日に支払えますか？","good"],
+["では来月まで待ちます","bad"],
+["売上はいくらですか？","waste"]
+]
+},
+{
+quote:"まだ分からないです。",
+options:[
+["具体的な支払日を決めてください","payfalse"],
+["分かったら連絡ください","bad"],
+["売上について聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"斎藤さん",
+age:"48歳",
+job:"会社員",
+rent:"82,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"給料がいつもより遅れてしまいました。",
+options:[
+["いつ入りますか？","good"],
+["なぜ遅れたんですか？","waste"],
+["会社に確認します","bad"]
+]
+},
+{
+quote:"28日です。",
+options:[
+["28日に支払えますか？","good"],
+["28日まで待ちます","bad"],
+["給料はいくらですか？","waste"]
+]
+},
+{
+quote:"はい。",
+options:[
+["では28日のお支払いでお願いします","pay"],
+["本当に大丈夫ですか？","waste"],
+["29日でもいいですよ","bad"]
+]
+}
+]
+},
+
+{
+name:"荒木さん",
+age:"44歳",
+job:"自営業",
+rent:"94,000円",
+arrears:"3か月",
+type:"crazy",
+willPay:true,
+turns:[
+{
+quote:"昨日、電子レンジが『明日払え』って言ってきたんですよ。",
+options:[
+["では、明日支払えますか？","good"],
+["電子レンジは何を言いました？","waste"],
+["声は録音しました？","waste"]
+]
+},
+{
+quote:"はい、明日なら払えると思います。",
+options:[
+["明日、確実に支払えますか？","good"],
+["電子レンジに確認しますか？","bad"],
+["何を温めていたんですか？","waste"]
+]
+},
+{
+quote:"払います。明日です。",
+options:[
+["では明日のお支払いでお願いします","pay"],
+["電子レンジにもお礼を言っておいてください","bad"],
+["本当に大丈夫ですか？","waste"]
+]
+}
+]
+},
+
+{
+name:"大塚さん",
+age:"40歳",
+job:"会社員",
+rent:"79,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"引き落とし口座の残高が足りませんでした。",
+options:[
+["いつなら支払えますか？","good"],
+["なぜ残高が足りなかったんですか？","waste"],
+["銀行に確認します","bad"]
+]
+},
+{
+quote:"給料日に払えます。",
+options:[
+["給料日は何日ですか？","good"],
+["給料日まで待ちます","bad"],
+["いくら給料がありますか？","waste"]
+]
+},
+{
+quote:"24日です。",
+options:[
+["24日に支払えますか？","pay"],
+["25日でもいいですよ","bad"],
+["残高不足の理由を聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"永井さん",
+age:"53歳",
+job:"会社員",
+rent:"81,000円",
+arrears:"2か月",
+type:"weird",
+willPay:false,
+turns:[
+{
+quote:"昨日、信号が全部私にだけ赤だったんですよ。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["どこの信号ですか？","waste"],
+["全部赤だったんですか？","waste"]
+]
+},
+{
+quote:"銀行にも行けなかったんです。",
+options:[
+["では、いつ支払えますか？","good"],
+["信号は今日どうでした？","waste"],
+["ネットバンキングは？","waste"]
+]
+},
+{
+quote:"信号が青になったら考えます。",
+options:[
+["具体的な支払日を決められますか？","payfalse"],
+["青になったら連絡ください","bad"],
+["信号の話を聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"近藤さん",
+age:"37歳",
+job:"会社員",
+rent:"76,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"今月だけ出費が重なってしまいました。",
+options:[
+["いつなら支払えますか？","good"],
+["何に使ったんですか？","waste"],
+["大変ですね","bad"]
+]
+},
+{
+quote:"次の給料日です。",
+options:[
+["給料日は何日ですか？","good"],
+["給料日まで待ちます","bad"],
+["給料はいくらですか？","waste"]
+]
+},
+{
+quote:"25日です。",
+options:[
+["25日に支払えますか？","pay"],
+["26日でもいいですよ","bad"],
+["出費について詳しく聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"高木さん",
+age:"57歳",
+job:"自営業",
+rent:"90,000円",
+arrears:"3か月",
+type:"normal",
+willPay:false,
+turns:[
+{
+quote:"今月は入金が少なくて。",
+options:[
+["いつなら支払えますか？","good"],
+["いくら入金があったんですか？","waste"],
+["来月は増えそうですか？","waste"]
+]
+},
+{
+quote:"来月なら。",
+options:[
+["来月の何日に支払えますか？","good"],
+["では来月まで待ちます","bad"],
+["売上について聞く","waste"]
+]
+},
+{
+quote:"まだ何とも言えません。",
+options:[
+["具体的な支払日を決められますか？","payfalse"],
+["また連絡ください","bad"],
+["入金について詳しく聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"福井さん",
+age:"31歳",
+job:"会社員",
+rent:"72,000円",
+arrears:"1か月",
+type:"weird",
+willPay:true,
+turns:[
+{
+quote:"朝起きたら枕が玄関にあったんですよ。びっくりして遅刻しました。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["枕はどこに置いていたんですか？","waste"],
+["誰が動かしたんでしょうね？","waste"]
+]
+},
+{
+quote:"給料は25日に入ります。",
+options:[
+["25日に支払えますか？","good"],
+["枕は戻しました？","waste"],
+["遅刻は大丈夫でした？","bad"]
+]
+},
+{
+quote:"はい、25日に払います。",
+options:[
+["25日のお支払いでお願いします","pay"],
+["枕にも気をつけてください","bad"],
+["本当に大丈夫ですか？","waste"]
+]
+}
+]
+},
+
+{
+name:"片山さん",
+age:"50歳",
+job:"会社員",
+rent:"85,000円",
+arrears:"2か月",
+type:"normal",
+willPay:false,
+turns:[
+{
+quote:"家族の支払いを優先してしまって。",
+options:[
+["では、いつ家賃を支払えますか？","good"],
+["家族には何があったんですか？","waste"],
+["家族に借りられませんか？","waste"]
+]
+},
+{
+quote:"給料日なら……。",
+options:[
+["給料日は何日ですか？","good"],
+["給料日まで待ちます","bad"],
+["給料はいくらですか？","waste"]
+]
+},
+{
+quote:"でも、その日に別の支払いもあるので……。",
+options:[
+["家賃を確実に支払える日はいつですか？","payfalse"],
+["別の支払いが終わるまで待ちます","bad"],
+["何の支払いですか？","waste"]
+]
+}
+]
+},
+
+{
+name:"宮本さん",
+age:"43歳",
+job:"会社員",
+rent:"77,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"給料の入金時間がいつもより遅かったんです。",
+options:[
+["いつ入金されますか？","good"],
+["なぜ遅かったんですか？","waste"],
+["銀行に確認します","bad"]
+]
+},
+{
+quote:"今日の夕方です。",
+options:[
+["今日の夕方に支払えますか？","good"],
+["何時ですか？","waste"],
+["銀行はどこですか？","waste"]
+]
+},
+{
+quote:"はい、払います。",
+options:[
+["では本日のお支払いでお願いします","pay"],
+["本当に払えますか？","waste"],
+["明日でもいいですよ","bad"]
+]
+}
+]
+},
+
+{
+name:"金子さん",
+age:"62歳",
+job:"年金生活",
+rent:"57,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"年金の入金を忘れていました。",
+options:[
+["いつ入金されますか？","good"],
+["なぜ忘れたんですか？","waste"],
+["年金事務所に電話しますか？","bad"]
+]
+},
+{
+quote:"15日です。",
+options:[
+["15日に支払えますか？","good"],
+["15日まで待ちます","bad"],
+["年金はいくらですか？","waste"]
+]
+},
+{
+quote:"はい。",
+options:[
+["では15日のお支払いでお願いします","pay"],
+["本当に大丈夫ですか？","waste"],
+["16日でもいいですよ","bad"]
+]
+}
+]
+},
+
+{
+name:"長田さん",
+age:"46歳",
+job:"自営業",
+rent:"87,000円",
+arrears:"2か月",
+type:"crazy",
+willPay:false,
+turns:[
+{
+quote:"昨日から床が少し浮いているので、お金も浮くと思ったんです。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["床はどのくらい浮いていますか？","waste"],
+["写真を撮りました？","waste"]
+]
+},
+{
+quote:"まだお金は浮いてないです。",
+options:[
+["では、現実的にいつ支払えますか？","good"],
+["床を押さえてみました？","waste"],
+["お金が浮くまで待ちます","bad"]
+]
+},
+{
+quote:"床次第ですね。",
+options:[
+["具体的な支払日を決められますか？","payfalse"],
+["床に聞いてみてください","bad"],
+["床について詳しく聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"内田さん",
+age:"35歳",
+job:"会社員",
+rent:"74,000円",
+arrears:"1か月",
+type:"normal",
+willPay:true,
+turns:[
+{
+quote:"今月だけ残高不足でした。",
+options:[
+["いつ支払えますか？","good"],
+["なぜ残高不足だったんですか？","waste"],
+["銀行に確認します","bad"]
+]
+},
+{
+quote:"給料日です。",
+options:[
+["給料日は何日ですか？","good"],
+["給料日まで待ちます","bad"],
+["給料はいくらですか？","waste"]
+]
+},
+{
+quote:"25日です。",
+options:[
+["25日に支払えますか？","pay"],
+["26日でもいいですよ","bad"],
+["残高不足の理由を聞く","waste"]
+]
+}
+]
+},
+
+{
+name:"坂本さん",
+age:"58歳",
+job:"会社員",
+rent:"82,000円",
+arrears:"2か月",
+type:"crazy",
+willPay:true,
+turns:[
+{
+quote:"昨日、テレビのニュースが私にだけ話しかけてきたんですよ。",
+options:[
+["では、家賃はいつ支払えますか？","good"],
+["何のニュースでした？","waste"],
+["テレビを消しました？","waste"]
+]
+},
+{
+quote:"今日なら払えます。",
+options:[
+["では今日支払えますか？","good"],
+["ニュースは何と言ってました？","waste"],
+["テレビはまだついてますか？","bad"]
+]
+},
+{
+quote:"はい、今日払います。",
+options:[
+["では本日のお支払いでお願いします","pay"],
+["テレビにもよろしく伝えてください","bad"],
+["本当に大丈夫ですか？","waste"]
+]
+}
+]
+},
+
+{
+name:"奥村さん",
+age:"42歳",
+job:"自営業",
+rent:"91,000円",
+arrears:"3か月",
+type:"normal",
+willPay:false,
+turns:[
+{
+quote:"来週、大きな入金がある予定です。",
+options:[
+["入金日はいつですか？","good"],
+["いくら入りますか？","waste"],
+["どこから入りますか？","waste"]
+]
+},
+{
+quote:"たぶん水曜日です。",
+options:[
+["水曜日に支払えますか？","good"],
+["たぶん、というのは？","waste"],
+["水曜日まで待ちます","bad"]
+]
+},
+{
+quote:"入金されなかったら無理です。",
+options:[
+["入金されなかった場合の支払日も決められますか？","payfalse"],
+["では水曜日まで待ちます","bad"],
+["入金先について聞く","waste"]
+]
+}
 ]
 }
 
@@ -1910,77 +3040,141 @@ turns:[
 
 
 /*
-====================================================
-ゲームシステム
-====================================================
+==================================================
+ゲーム変数
+==================================================
 */
 
 let selectedCases=[];
 let currentPerson=0;
 let currentTurn=0;
 
-let score=0;
 let paymentCount=0;
 let wasteCount=0;
-let confusedCount=0;
+let troubleCount=0;
+
+let paymentThisPerson=false;
+let personFailed=false;
 
 
-/* 配列シャッフル */
+/*
+==================================================
+シャッフル
+==================================================
+*/
 
-function shuffle(array){
+function shuffle(arr){
 
-  const copy=[...array];
+  const copy=[...arr];
 
   for(let i=copy.length-1;i>0;i--){
 
     const j=Math.floor(Math.random()*(i+1));
 
     [copy[i],copy[j]]=[copy[j],copy[i]];
-
   }
 
   return copy;
 }
 
 
-/* 50人から5人選択 */
+/*
+==================================================
+ゲーム開始
+
+最低でも
+crazy 1人
+weird 1人
+を必ず入れる。
+
+残り3人はランダム。
+
+==================================================
+*/
 
 function startGame(){
 
-  selectedCases=shuffle(cases).slice(0,5);
+  const crazy=cases.filter(c=>c.type==="crazy");
+  const weird=cases.filter(c=>c.type==="weird");
+  const normal=cases.filter(c=>c.type==="normal");
+
+  const firstCrazy=
+    shuffle(crazy)[0];
+
+  const firstWeird=
+    shuffle(weird)[0];
+
+  const remainingPool=[
+    ...normal,
+    ...weird.filter(c=>c!==firstWeird),
+    ...crazy.filter(c=>c!==firstCrazy)
+  ];
+
+  selectedCases=[
+    firstCrazy,
+    firstWeird,
+    ...shuffle(remainingPool).slice(0,3)
+  ];
+
+  selectedCases=shuffle(selectedCases);
 
   currentPerson=0;
   currentTurn=0;
 
-  score=0;
   paymentCount=0;
   wasteCount=0;
-  confusedCount=0;
+  troubleCount=0;
+
+  document.getElementById("start").style.display="none";
+  document.getElementById("game").classList.remove("hidden");
 
   render();
 
 }
 
 
-/* 表示 */
+/*
+==================================================
+表示
+==================================================
+*/
 
 function render(){
 
   const c=selectedCases[currentPerson];
-  const turn=c.turns[currentTurn];
+  const t=c.turns[currentTurn];
 
-  document.getElementById("progress").textContent=
-    `入居者 ${currentPerson+1} / 5　｜　TURN ${currentTurn+1} / 3`;
+  document.getElementById("personCount").textContent=
+    `滞納者 ${currentPerson+1} / 5`;
 
-  document.getElementById("score").textContent=score;
+  document.getElementById("paymentCount").textContent=
+    paymentCount;
 
-  document.getElementById("case").textContent=
-    `CASE ${currentPerson+1}`;
+  document.getElementById("progressBar").style.width=
+    ((currentPerson*3+currentTurn+1)/15*100)+"%";
 
-  document.getElementById("name").textContent=
+  document.getElementById("personName").textContent=
     c.name;
 
-  document.getElementById("info").innerHTML=`
+  let typeText="";
+
+  if(c.type==="normal"){
+    typeText="普通の滞納者";
+  }
+
+  if(c.type==="weird"){
+    typeText="ちょっと変な滞納者";
+  }
+
+  if(c.type==="crazy"){
+    typeText="かなり変な滞納者";
+  }
+
+  document.getElementById("personMeta").innerHTML=
+    `${typeText}<br><span class="badge">対応中</span>`;
+
+  document.getElementById("personInfo").innerHTML=
+    `
     <div>
       年齢
       <b>${c.age}</b>
@@ -1998,274 +3192,289 @@ function render(){
 
     <div>
       滞納
-      <b>${c.delay}</b>
+      <b>${c.arrears}</b>
     </div>
+    `;
 
-    <div style="grid-column:1/-1">
-      過去の滞納
-      <b>${c.history}</b>
-    </div>
-  `;
+  document.getElementById("turn").textContent=
+    `第${currentTurn+1}ターン / 3`;
 
   document.getElementById("quote").textContent=
-    currentTurn===0
-    ? c.opening
-    : turn.previousReply || "……";
+    t.quote;
 
-  document.getElementById("question").textContent=
-    turn.question;
+  const options=
+    document.getElementById("options");
 
-  const choices=document.getElementById("choices");
+  options.innerHTML="";
 
-  choices.innerHTML="";
+  t.options.forEach((op,index)=>{
 
-  turn.choices.forEach((choice,index)=>{
+    const button=
+      document.createElement("button");
 
-    const button=document.createElement("button");
-
-    button.className="choice";
+    button.className="option";
 
     button.textContent=
-      `${index+1}. ${choice.text}`;
+      `${["A","B","C"][index]}　${op[0]}`;
 
-    button.onclick=()=>answer(choice);
+    button.onclick=
+      ()=>selectOption(op[1]);
 
-    choices.appendChild(button);
+    options.appendChild(button);
 
   });
 
-  document.getElementById("game").style.display="block";
   document.getElementById("result").style.display="none";
-  document.getElementById("final").style.display="none";
 
 }
 
 
-/* 回答 */
+/*
+==================================================
+質問を選択
+==================================================
+*/
 
-function answer(choice){
+function selectOption(type){
 
-  if(choice.effect==="payment"){
+  if(type==="waste"){
 
-    score+=10;
-    paymentCount++;
-
-  }
-
-  else if(choice.effect==="waste"){
-
-    score-=3;
     wasteCount++;
 
+    showResult(
+      "😇 それ、今聞く必要ある？",
+      "話は聞けましたが、支払日には近づきませんでした。"
+    );
+
+    return;
   }
 
-  else if(choice.effect==="confused"){
 
-    score-=5;
-    confusedCount++;
+  if(type==="bad"){
 
+    troubleCount++;
+
+    showResult(
+      "🌀 話がそれました",
+      "滞納者の話に付き合っているうちに、支払日の話から離れてしまいました。"
+    );
+
+    return;
   }
 
 
-  if(score<0) score=0;
+  if(type==="pay"){
 
-  document.getElementById("score").textContent=score;
+    paymentThisPerson=true;
+    paymentCount++;
 
-  document.getElementById("game").style.display="none";
-  document.getElementById("result").style.display="block";
+    showResult(
+      "🎯 支払日を引き出した！",
+      "いい対応です。変な話をしていても、最後はちゃんと支払日を確認できました。"
+    );
 
-  let title="";
-
-  if(choice.effect==="payment"){
-
-    title="💰 支払日を引き出した！";
-
+    return;
   }
 
-  else if(choice.effect==="waste"){
 
-    title="❓ それ、聞かなくてもよかったかも";
+  if(type==="payfalse"){
 
+    personFailed=true;
+
+    showResult(
+      "😇 支払日を引き出せなかった…",
+      "もっともらしい話や奇妙な言い訳に付き合うだけでは、支払日は決まりません。"
+    );
+
+    return;
   }
 
-  else if(choice.effect==="confused"){
 
-    title="🌀 滞納者に振り回された！";
+  if(type==="good"){
 
-  }
+    showResult(
+      "👍 いい質問！",
+      "支払日に一歩近づきました。次のターンへ。"
+    );
 
-  else{
-
-    title="👍 まずまずの対応";
-
-  }
-
-  document.getElementById("resultBig").textContent=title;
-
-  document.getElementById("resultReason").innerHTML=
-    choice.reply;
-
-  document.getElementById("explain").innerHTML=
-    `<b>今回のポイント</b><br>
-    ${
-      choice.effect==="payment"
-      ?"具体的な支払日・支払条件を引き出せました。"
-      :
-      choice.effect==="waste"
-      ?"相手の事情に入り込みすぎるより、「いつ払えるのか」を聞くほうが有効です。"
-      :
-      choice.effect==="confused"
-      ?"相手の話に付き合いすぎると、本来確認すべき支払日の話からそれてしまいます。"
-      :
-      "悪くない対応です。ただし、できれば具体的な支払日まで確認したいところです。"
-    }`;
-
-  const nextButton=document.getElementById("nextButton");
-
-  if(currentTurn===2 && currentPerson===4){
-
-    nextButton.textContent="結果を見る →";
-
-  }
-
-  else if(currentTurn===2){
-
-    nextButton.textContent="次の滞納者へ →";
-
-  }
-
-  else{
-
-    nextButton.textContent="次のターンへ →";
-
+    return;
   }
 
 }
 
 
-/* 次へ */
+/*
+==================================================
+結果表示
+==================================================
+*/
+
+function showResult(title,text){
+
+  document.getElementById("game").classList.add("hidden");
+
+  document.getElementById("result").style.display="block";
+
+  document.getElementById("resultTitle").textContent=
+    title;
+
+  document.getElementById("resultText").textContent=
+    text;
+
+  const button=
+    document.getElementById("nextButton");
+
+  button.textContent=
+    "次へ →";
+
+}
+
+
+/*
+==================================================
+次へ
+==================================================
+*/
 
 function nextTurn(){
 
+  document.getElementById("result").style.display="none";
+
   /*
-  次のターン
+  支払日を引き出した
   */
 
-  if(currentTurn<2){
+  if(paymentThisPerson){
 
-    currentTurn++;
-
-    /*
-    前のターンの回答を次のターンに表示
-    */
-
-    const resultText=
-      document.getElementById("resultReason").textContent;
-
-    selectedCases[currentPerson]
-      .turns[currentTurn]
-      .previousReply=resultText;
-
-    render();
+    finishPerson();
 
     return;
-
   }
 
 
   /*
-  次の入居者
+  その人で3ターン終了
   */
 
-  if(currentPerson<4){
+  if(currentTurn>=2){
 
-    currentPerson++;
-    currentTurn=0;
+    if(!paymentThisPerson){
 
-    render();
+      troubleCount++;
+
+    }
+
+    finishPerson();
 
     return;
-
   }
 
 
-  /*
-  ゲーム終了
-  */
+  currentTurn++;
 
-  showFinal();
+  document.getElementById("game").classList.remove("hidden");
+
+  render();
 
 }
 
 
-/* 最終結果 */
+/*
+==================================================
+人物終了
+==================================================
+*/
 
-function showFinal(){
+function finishPerson(){
 
-  document.getElementById("game").style.display="none";
+  currentTurn=0;
+  paymentThisPerson=false;
+  personFailed=false;
+
+  currentPerson++;
+
+  if(currentPerson>=5){
+
+    finishGame();
+
+    return;
+  }
+
+  document.getElementById("game").classList.remove("hidden");
+
+  render();
+
+}
+
+
+/*
+==================================================
+最終結果
+==================================================
+*/
+
+function finishGame(){
+
+  document.getElementById("game").classList.add("hidden");
+
   document.getElementById("result").style.display="none";
+
   document.getElementById("final").style.display="block";
 
+  const score=
+    paymentCount*20
+    -wasteCount*2
+    -troubleCount*5;
+
+  const finalScore=
+    Math.max(0,score);
+
   document.getElementById("finalScore").textContent=
-    score+"点";
+    finalScore+"点";
 
-  document.getElementById("paymentCount").textContent=
-    paymentCount;
+  document.getElementById("finalPayment").textContent=
+    paymentCount+"/5";
 
-  document.getElementById("wasteCount").textContent=
+  document.getElementById("finalWaste").textContent=
     wasteCount;
 
-  document.getElementById("confusedCount").textContent=
-    confusedCount;
+  document.getElementById("finalTrouble").textContent=
+    troubleCount;
 
 
   let text="";
 
-
-  if(score>=120){
+  if(paymentCount===5 && wasteCount<=1){
 
     text=
-      "🏆 完璧！滞納者の話を聞きながら、しっかり支払日を引き出しています。";
+      "完璧。言い訳を聞きながらも、ちゃんと支払日を引き出しています。";
+
+  }else if(paymentCount>=4){
+
+    text=
+      "かなり優秀。変な入居者に当たっても、冷静に支払日の話へ戻せています。";
+
+  }else if(paymentCount>=3){
+
+    text=
+      "なかなかの対応力。もう少しだけ、言い訳に付き合いすぎないことがポイントです。";
+
+  }else if(paymentCount>=1){
+
+    text=
+      "滞納者の話を聞くことに一生懸命になりすぎています。管理会社はカウンセリングルームではありません。";
+
+  }else{
+
+    text=
+      "……今日は滞納者に完敗です。電話を切ったあと、もう一度こちらから電話しましょう。";
 
   }
 
-  else if(score>=90){
-
-    text=
-      "👏 かなり優秀！滞納者に振り回されず、具体的な支払日を取れています。";
-
-  }
-
-  else if(score>=60){
-
-    text=
-      "👍 なかなかです。でも、もう少し「で、いつ払えるんですか？」を強く聞いてもいいかも。";
-
-  }
-
-  else if(score>=30){
-
-    text=
-      "😅 優しすぎます。滞納者の事情を聞くうちに、支払日の話がどこかへ行っています。";
-
-  }
-
-  else{
-
-    text=
-      "😂 完全に滞納者に持っていかれています。管理会社に戻ってきてください。";
-
-  }
-
-
-  document.getElementById("finalText").textContent=text;
+  document.getElementById("finalText").textContent=
+    text;
 
 }
-
-
-/* スタート */
-
-startGame();
 
 </script>
 
