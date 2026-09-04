@@ -3,263 +3,142 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>この言い訳、信じる？</title>
-
+<title>この言い訳、信じる？｜管理会社適正診断ゲーム</title>
 <style>
 *{box-sizing:border-box}
-
 body{
- margin:0;
- background:#f4f1eb;
- color:#292929;
- font-family:-apple-system,BlinkMacSystemFont,
- "Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(180deg,#ece8df 0%,#dcd6ca 100%);
+  color:#292929;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
 }
-
-.wrap{
- max-width:560px;
- margin:auto;
- padding:20px 16px 40px
+.wrap{max-width:560px;margin:auto;padding:20px 16px 40px}
+.header{text-align:center;padding:10px 0 18px}
+.logo{font-size:11px;font-weight:800;letter-spacing:2px;color:#888;margin-bottom:7px}
+.phoneLine{
+  display:flex;align-items:center;gap:10px;background:#292929;color:#fff;
+  padding:10px 14px;border-radius:14px;margin:0 0 14px;
+  box-shadow:0 6px 18px #00000020;font-size:12px;text-align:left
 }
-
-.header{
- text-align:center;
- padding:12px 0 16px
-}
-
-h1{
- font-size:28px;
- margin:4px 0 6px
-}
-
-.sub{
- font-size:13px;
- color:#777
-}
-
-.top{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin:8px 0 12px;
- font-size:13px;
- color:#666
-}
-
+.phonePulse{font-size:20px;animation:ring 1.1s infinite}
+@keyframes ring{0%,100%{transform:rotate(0)}20%{transform:rotate(-12deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(8deg)}}
+h1{font-size:30px;margin:4px 0 7px;letter-spacing:.03em}
+.sub{font-size:13px;color:#777;line-height:1.6}
 .card{
- background:#fff;
- border-radius:18px;
- padding:20px;
- box-shadow:0 5px 20px #00000012
+  background:#fff;border-radius:20px;padding:20px;
+  box-shadow:0 8px 30px #00000014;
 }
-
-.case{
- font-size:12px;
- color:#888;
- margin-bottom:8px
-}
-
-.info{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:8px;
- margin:14px 0
-}
-
-.info div{
- background:#f5f3ef;
- border-radius:9px;
- padding:10px;
- font-size:13px
-}
-
-.info b{
- display:block;
- font-size:16px;
- margin-top:2px
-}
-
+.start{text-align:center}
+.startIcon{font-size:56px;margin:6px 0}
+.start h2{font-size:24px;margin:8px 0}
+.startText{font-size:14px;color:#666;line-height:1.8;margin:14px 0 18px}
+.startInfo{text-align:left;background:#f5f3ef;border-radius:14px;padding:15px;font-size:13px;line-height:1.9;margin-bottom:18px}
+.top{display:flex;justify-content:space-between;align-items:center;margin:8px 0 12px;font-size:13px}
+.caseCount{background:#292929;color:#fff;padding:7px 12px;border-radius:999px;font-weight:bold}
+.scoreBox{background:#fff;padding:7px 12px;border-radius:999px;box-shadow:0 3px 12px #00000010;font-weight:bold}
+.case{font-size:12px;color:#888;margin-bottom:8px}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.info div{background:#f5f3ef;border-radius:10px;padding:10px;font-size:12px}
+.info b{display:block;font-size:15px;margin-top:3px}
 .quote{
- margin:18px 0 22px;
- background:#292929;
- color:#fff;
- border-radius:14px;
- padding:18px;
- font-size:18px;
- line-height:1.8;
- position:relative
+  margin:18px 0 22px;background:#292929;color:#fff;border-radius:18px;
+  padding:20px;font-size:18px;line-height:1.8;box-shadow:0 8px 20px #00000025;
+  position:relative;border:3px solid #3b3b3b
 }
-
-.quote:before{
- content:"入居者";
- display:block;
- color:#aaa;
- font-size:11px;
- margin-bottom:5px
-}
-
-.buttons{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:10px
-}
-
-button{
- border:0;
- border-radius:12px;
- padding:17px 8px;
- font-size:18px;
- font-weight:700;
- cursor:pointer
-}
-
-.truth{
- background:#dcefe2;
- color:#205d34
-}
-
-.lie{
- background:#f5dfe0;
- color:#8a2930
-}
-
-button:active{
- transform:scale(.98)
-}
-
-.result{
- display:none;
- text-align:center
-}
-
-.result .big{
- font-size:28px;
- font-weight:800;
- margin:4px
-}
-
-.correct{
- color:#25733f
-}
-
-.wrong{
- color:#a52d35
-}
-
-.explain{
- text-align:left;
- background:#f5f3ef;
- border-radius:12px;
- padding:14px;
- margin-top:16px;
- font-size:14px;
- line-height:1.7
-}
-
-.next{
- width:100%;
- background:#292929;
- color:#fff;
- margin-top:15px;
- font-size:16px
-}
-
-.final{
- display:none;
- text-align:center
-}
-
-.final h2{
- font-size:25px
-}
-
-.score{
- font-size:42px;
- font-weight:800
-}
+.quote:before{content:"📞 OUTGOING CALL　滞納者";display:block;color:#bdbdbd;font-size:11px;margin-bottom:8px;letter-spacing:.05em}
+.quote:after{content:"発信中 ●";position:absolute;right:14px;top:13px;color:#8fd19e;font-size:10px}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{border:0;border-radius:14px;padding:17px 8px;font-size:17px;font-weight:800;cursor:pointer;transition:.15s}
+button:hover{transform:translateY(-2px)}
+button:active{transform:scale(.97)}
+.truth{background:#dcefe2;color:#205d34}
+.lie{background:#f5dfe0;color:#8a2930}
+.startButton,.next{width:100%;background:#292929;color:#fff;margin-top:10px}
+.result,.final{display:none;text-align:center}
+.resultIcon{font-size:48px;margin:5px}
+.result .big{font-size:28px;font-weight:800;margin:5px}
+.correct{color:#25733f}.wrong{color:#a52d35}
+.answerText{margin-top:10px;font-size:15px}
+.explain{text-align:left;background:#f5f3ef;border-radius:14px;padding:15px;margin-top:18px;font-size:14px;line-height:1.8}
+.final h2{font-size:24px;margin-bottom:5px}
+.rank{display:inline-block;padding:7px 15px;border-radius:999px;background:#292929;color:#fff;font-size:13px;font-weight:bold;margin:8px}
+.score{font-size:46px;font-weight:900;margin:8px}
+.typeTitle{font-size:24px;font-weight:900;margin:15px 0 8px}
+.finalText{color:#555;line-height:1.8;font-size:14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:20px;text-align:left}
+.stat{background:#f5f3ef;border-radius:12px;padding:12px;font-size:12px}
+.stat b{display:block;font-size:22px;margin-top:3px}
 </style>
 </head>
-
 <body>
-
 <div class="wrap">
 
 <div class="header">
-<h1>この言い訳、信じる？</h1>
-<div class="sub">家賃滞納者の一言を、直感で見抜け。</div>
+  <div class="phoneLine"><span class="phonePulse">📞</span><span><b>RENT COLLECTION CALL</b><br>滞納者に電話をかけています…</span></div>
+  <div class="logo">MANAGEMENT COMPANY GAME</div>
+  <h1>この言い訳、信じる？</h1>
+  <div class="sub">家賃滞納者の一言を、直感と経験で見抜け。</div>
 </div>
 
-<div class="top">
-<span id="count">CASE 1 / 10</span>
-<strong>スコア：<span id="score">0</span></strong>
+<div class="card start" id="start">
+  <div class="startIcon">📞</div>
+  <h2>管理会社適正診断</h2>
+  <div class="startText">
+    あなたは賃貸管理会社の担当者。<br>
+    あなたから滞納者へ電話をかけます。<br>
+    相手の言い訳を聞いて、<strong>真実なのか、嘘なのか</strong>を判断しよう。
+  </div>
+  <div class="startInfo">
+    📞 あなたは管理会社の担当者<br>
+    🎲 全10人の滞納者に電話をかけます<br>
+    🧠 話の内容と過去の情報から判断<br>
+    📊 最後に、あなたの管理会社適性を診断します
+  </div>
+  <button class="startButton" onclick="startGame()">🎮 GAME START</button>
 </div>
 
-
-<div class="card" id="game">
-
-<div class="case" id="case"></div>
-
-<div class="info" id="info"></div>
-
-<div class="quote" id="quote"></div>
-
-<div class="buttons">
-<button class="truth" onclick="answer(true)">
-🟢 真実
-</button>
-
-<button class="lie" onclick="answer(false)">
-🔴 嘘
-</button>
+<div class="top" id="gameTop" style="display:none">
+  <span class="caseCount" id="count">CALL 1 / 10</span>
+  <span class="scoreBox">SCORE：<span id="score">0</span></span>
 </div>
 
+<div class="card" id="game" style="display:none">
+  <div class="case" id="case"></div>
+  <div class="info" id="info"></div>
+  <div class="quote" id="quote"></div>
+  <div class="buttons">
+    <button class="truth" onclick="answer(true)">🟢 真実</button>
+    <button class="lie" onclick="answer(false)">🔴 嘘</button>
+  </div>
 </div>
-
 
 <div class="card result" id="result">
-
-<div class="big" id="resultBig"></div>
-
-<div id="resultReason"></div>
-
-<div class="explain" id="explain"></div>
-
-<button class="next" onclick="next()">
-次の滞納者へ →
-</button>
-
+  <div class="resultIcon" id="resultIcon"></div>
+  <div class="big" id="resultBig"></div>
+  <div class="answerText" id="resultReason"></div>
+  <div class="explain" id="explain"></div>
+  <button class="next" id="nextButton" onclick="next()">次の滞納者へ →</button>
 </div>
-
 
 <div class="card final" id="final">
-
-<h2>あなたの滞納者見抜き力</h2>
-
-<div class="score" id="finalScore"></div>
-
-<p id="finalText"></p>
-
-<button class="next" onclick="location.reload()">
-もう一度やる
-</button>
-
+  <h2>診断結果</h2>
+  <div class="rank" id="rank"></div>
+  <div class="score" id="finalScore"></div>
+  <div class="typeTitle" id="typeTitle"></div>
+  <div class="finalText" id="finalText"></div>
+  <div class="stats">
+    <div class="stat">🟢 真実を正しく信じた<b id="correctTruth">0</b></div>
+    <div class="stat">🔴 嘘を正しく見抜いた<b id="correctLie">0</b></div>
+    <div class="stat">🕵️ 真実を疑いすぎ<b id="tooSuspicious">0</b></div>
+    <div class="stat">😇 嘘を信じすぎ<b id="tooTrusting">0</b></div>
+  </div>
+  <button class="next" onclick="location.reload()">🔄 もう一度診断する</button>
 </div>
 
 </div>
-
 
 <script>
-
-
-/*
-========================================
-50 CASES
-========================================
-true  = 真実
-false = 嘘
-========================================
-*/
-
 const cases=[
 
 [
@@ -624,193 +503,164 @@ true,
 "実家から送ってもらうことになってるんです。明日には届くと思います。",
 false,
 "実家から送金される具体的な証拠がなく、過去にも同じ説明で支払いが延びている。"
-]
-
+],
+  [
+    "アルミホイルが切れた人",
+    "不明",
+    "不明",
+    "不明",
+    "家賃滞納",
+    "不明",
+    "アルミホイルが切れたので外に出られません。Amazonが届いたら行きますので、明日まで待ってください。",
+    true,
+    "あまりにも意味がわからなかったが、翌日、本当に支払いがあった。"
+  ]
 ];
 
-
-/*
-========================================
-50問からランダム10問
-========================================
-*/
-
 function shuffle(array){
- return array.sort(()=>Math.random()-0.5);
+  const copy=[...array];
+  for(let j=copy.length-1;j>0;j--){
+    const k=Math.floor(Math.random()*(j+1));
+    [copy[j],copy[k]]=[copy[k],copy[j]];
+  }
+  return copy;
 }
 
-const selectedCases=shuffle([...cases]).slice(0,10);
-
+let selectedCases=[];
 let i=0;
 let score=0;
+let correctTruth=0;
+let correctLie=0;
+let tooSuspicious=0;
+let tooTrusting=0;
+let answered=false;
 
+function startGame(){
+  const truthCases=shuffle(cases.filter(c=>c[7]===true)).slice(0,5);
+  const lieCases=shuffle(cases.filter(c=>c[7]===false)).slice(0,5);
+  selectedCases=shuffle([...truthCases,...lieCases]);
 
-/*
-========================================
-問題表示
-========================================
-*/
+  document.getElementById("start").style.display="none";
+  document.getElementById("gameTop").style.display="flex";
+  render();
+}
 
 function render(){
+  answered=false;
+  const c=selectedCases[i];
 
- const c=selectedCases[i];
+  document.getElementById("count").textContent=`CALL ${i+1} / ${selectedCases.length}`;
+  document.getElementById("case").textContent=`入居者：${c[0]}`;
 
- document.getElementById("count").textContent=
- `CASE ${i+1} / ${selectedCases.length}`;
+  document.getElementById("info").innerHTML=
+  `<div>年齢<b>${c[1]}</b></div>
+   <div>職業<b>${c[2]}</b></div>
+   <div>家賃<b>${c[3]}</b></div>
+   <div>滞納<b>${c[4]}</b></div>
+   <div style="grid-column:1/-1">過去の滞納<b>${c[5]}</b></div>`;
 
- document.getElementById("case").textContent=
- `入居者：${c[0]}`;
-
- document.getElementById("info").innerHTML=
- `<div>年齢<b>${c[1]}</b></div>
-  <div>職業<b>${c[2]}</b></div>
-  <div>家賃<b>${c[3]}</b></div>
-  <div>滞納<b>${c[4]}</b></div>
-  <div style="grid-column:1/-1">
-  過去の滞納<b>${c[5]}</b>
-  </div>`;
-
- document.getElementById("quote").textContent=c[6];
-
- document.getElementById("game").style.display="block";
- document.getElementById("result").style.display="none";
- document.getElementById("final").style.display="none";
+  document.getElementById("quote").textContent=c[6];
+  document.getElementById("game").style.display="block";
+  document.getElementById("result").style.display="none";
 }
-
-
-/*
-========================================
-回答
-========================================
-*/
 
 function answer(choice){
+  if(answered)return;
+  answered=true;
 
- const c=selectedCases[i];
+  const c=selectedCases[i];
+  const ok=choice===c[7];
 
- const ok=choice===c[7];
+  if(ok)score+=10;
 
- if(ok){
-   score+=10;
- }
+  if(c[7]===true && choice===true)correctTruth++;
+  else if(c[7]===false && choice===false)correctLie++;
+  else if(c[7]===true && choice===false)tooSuspicious++;
+  else if(c[7]===false && choice===true)tooTrusting++;
 
- document.getElementById("score").textContent=score;
+  document.getElementById("score").textContent=score;
+  document.getElementById("game").style.display="none";
+  document.getElementById("result").style.display="block";
 
- document.getElementById("game").style.display="none";
- document.getElementById("result").style.display="block";
+  let title="",className="",icon="";
+  if(c[7]===false && choice===false){
+    title="見抜いた！";className="correct";icon="🎯";
+  }else if(c[7]===true && choice===true){
+    title="正解！";className="correct";icon="⭕";
+  }else if(c[7]===false && choice===true){
+    title="騙された！";className="wrong";icon="😈";
+  }else{
+    title="疑いすぎ！";className="wrong";icon="🕵️";
+  }
 
+  document.getElementById("resultIcon").textContent=icon;
+  document.getElementById("resultBig").className="big "+className;
+  document.getElementById("resultBig").textContent=title;
+  document.getElementById("resultReason").innerHTML=
+    `答えは <b>${c[7]?"真実 🟢":"嘘 🔴"}</b> でした。`;
+  document.getElementById("explain").innerHTML=
+    `<b>🏢 管理会社メモ</b><br><br>${c[8]}`;
 
- /*
- 真実・嘘 × 正解・不正解
- */
-
- let title="";
- let className="";
-
- if(c[7]===false && choice===false){
-
-   // 嘘を嘘と見抜いた
-   title="🎯 見抜いた！";
-   className="correct";
-
- }
-
- else if(c[7]===true && choice===true){
-
-   // 真実を真実と判断
-   title="🎯 正解！";
-   className="correct";
-
- }
-
- else if(c[7]===false && choice===true){
-
-   // 嘘を信じてしまった
-   title="😈 騙された！";
-   className="wrong";
-
- }
-
- else{
-
-   // 真実なのに嘘だと思った
-   title="😅 疑いすぎ！";
-   className="wrong";
-
- }
-
-
- document.getElementById("resultBig").className=
- "big "+className;
-
- document.getElementById("resultBig").textContent=
- title;
-
- document.getElementById("resultReason").innerHTML=
- `答えは <b>${c[7]?"真実":"嘘"}</b> でした。`;
-
- document.getElementById("explain").innerHTML=
- `<b>管理会社メモ</b><br>${c[8]}`;
-
- document.querySelector(".next").textContent=
- i===selectedCases.length-1
- ?"結果を見る →"
- :"次の滞納者へ →";
+  document.getElementById("nextButton").textContent=
+    i===selectedCases.length-1?"📊 通話記録を確認する →":"📞 次の滞納者に電話する →";
 }
-
-
-/*
-========================================
-次の問題
-========================================
-*/
 
 function next(){
-
- if(i<selectedCases.length-1){
-
-   i++;
-   render();
-
- }
-
- else{
-
-   document.getElementById("result").style.display="none";
-   document.getElementById("final").style.display="block";
-
-   document.getElementById("finalScore").textContent=
-   score+" / 100";
-
-
-   document.getElementById("finalText").textContent=
-
-   score===100
-   ?"完璧。もう滞納者の声が聞こえる。"
-
-   :score>=90
-   ?"完璧に近い。あなた、かなり疑り深いです。"
-
-   :score>=80
-   ?"かなり鋭い。滞納者からすると嫌な担当者。"
-
-   :score>=70
-   ?"なかなか。管理会社として良い嗅覚です。"
-
-   :score>=60
-   ?"悪くない。でも、もう少しだけ疑ってもいいかも。"
-
-   :score>=40
-   ?"人を信じる心を持ちすぎています。"
-
-   :"まだまだ新人。電話を100本くらい受けよう。";
- }
+  if(i<selectedCases.length-1){
+    i++;
+    render();
+  }else{
+    showFinal();
+  }
 }
 
+function showFinal(){
+  document.getElementById("result").style.display="none";
+  document.getElementById("gameTop").style.display="none";
+  document.getElementById("final").style.display="block";
 
-render();
+  document.getElementById("finalScore").textContent=score+" / 100";
+  document.getElementById("correctTruth").textContent=correctTruth;
+  document.getElementById("correctLie").textContent=correctLie;
+  document.getElementById("tooSuspicious").textContent=tooSuspicious;
+  document.getElementById("tooTrusting").textContent=tooTrusting;
 
+  let rank="",type="",text="";
+
+  if(score===100){
+    rank="Sランク";
+    type="👑 管理会社の化け物";
+    text="完璧。<br><br>真実と嘘を完全に見抜いています。<br>もう滞納者の声を聞いただけで、だいたい何を言うかわかるレベルです。";
+  }else if(tooSuspicious>=2 && tooSuspicious>tooTrusting){
+    rank=score>=80?"Aランク":"Bランク";
+    type="🕵️ 疑い深すぎる担当者";
+    text="嘘を見抜こうとする力はかなりあります。<br><br>ただし、本当に困っている入居者まで疑っている可能性があります。<br>もう少し人を信じてもいいかもしれません。";
+  }else if(tooTrusting>=2 && tooTrusting>tooSuspicious){
+    rank=score>=80?"Aランク":"Bランク";
+    type="😇 人を信じすぎる担当者";
+    text="あなたには人を信じる優しい心があります。<br><br>ただし、滞納者の中にはその優しさを利用する人もいます。<br>もう少しだけ、過去の履歴を確認しましょう。";
+  }else if(score>=80){
+    rank="Aランク";
+    type="🔥 ベテラン管理会社";
+    text="かなり鋭い判断力です。<br><br>真実と嘘を冷静に判断できています。<br>滞納者からすると、あまり担当してほしくないタイプです。";
+  }else if(score>=60){
+    rank="Bランク";
+    type="⚖️ バランス型管理会社";
+    text="悪くありません。<br><br>人を疑いすぎることもなく、信じすぎることもない。<br>経験を積めば、かなり良い管理会社担当者になれそうです。";
+  }else if(score>=40){
+    rank="Cランク";
+    type="📞 まだまだ新人";
+    text="判断に少し迷いがあるようです。<br><br>でも大丈夫。<br>電話を100本くらい受ければ、少しずつ勘が身についてきます。";
+  }else{
+    rank="Dランク";
+    type="🫠 管理会社には優しすぎる";
+    text="あなたはたぶん、いい人です。<br><br>ただ、管理会社で働くには少し人を信じすぎています。<br><br>滞納者の話は聞く。でも、記録も確認する。<br><br>これが管理会社です。";
+  }
+
+  document.getElementById("rank").textContent=rank;
+  document.getElementById("typeTitle").textContent=type;
+  document.getElementById("finalText").innerHTML=text;
+}
 </script>
-
 </body>
 </html>
